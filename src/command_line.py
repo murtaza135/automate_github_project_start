@@ -20,13 +20,13 @@ def generate_repo_name_based_upon_cwd():
     parent_directory_folder_name = parent_directory_folder_name.lower().replace(" ", "_")
     return parent_directory_folder_name
 
-def parse_and_return_args():
+def get_args_from_terminal():
     parser = argparse.ArgumentParser(description="A script used to automatically setup a remote github repository and then setup your local repository with all the things that you require, such as a virtual env, src directory, .gitignore file, etc")
     
     parser.add_argument("--no_remote_repo", action="store_true", help="do not create a remote github repository, only create a local repository")
-    parser.add_argument("-n", "--repo_name", metavar="name", default=generate_repo_name_based_upon_cwd(), help="choose a name for your remote github repository, defaults to name of cwd, note that this requires the --no_remote_repo flag not to be used")
+    parser.add_argument("-n", "--repo_name", metavar="name", type=str, default=generate_repo_name_based_upon_cwd(), help="choose a name for your remote github repository, defaults to name of cwd, note that this requires the --no_remote_repo flag not to be used")
     # parser.add_argument("--create_remote_repo", metavar="name", nargs="?", const=generate_repo_name_based_upon_cwd(), help="create a remote repository on github with your given name, if no name is given, it will default to the name of the cwd")
-    parser.add_argument("-d", "--local_directory", metavar="path", default=os.getcwd(), help="create local repository in chosen path, defaults to cwd if flag is not specified")
+    parser.add_argument("-d", "--local_directory", metavar="path", type=str, default=os.getcwd(), help="create local repository in chosen path, defaults to cwd if flag is not specified")
     parser.add_argument("-v", "--venv", action="store_true", help="create a venv")
     parser.add_argument("--docs", action="store_true", help="create a docs directory")
     parser.add_argument("--logs", action="store_true", help="create a logs directory")
@@ -34,30 +34,47 @@ def parse_and_return_args():
     parser.add_argument("--src", action="store_true", help="create a src directory")
     parser.add_argument("--tests", action="store_true", help="create a tests directory")
     parser.add_argument("--requirements", action="store_true", help="create a requirements.txt file")
-    parser.add_argument("--gitignore", help="choose a gitignore template")
-    parser.add_argument("-c", "--config", help="enter a config.ini file")
+    parser.add_argument("--gitignore", type=str, help="choose a gitignore template")
+    parser.add_argument("-c", "--config", type=argparse.FileType('r'), help="enter a config.ini file")
 
     args = parser.parse_args()
     return args
 
 
-def config_parser():
-    filename = "C:\\Users\\murta\\Google Drive\\Murtaza\\Computing\\-- Current Computer Science\\-- CURRENT\\Automate Github Project Start\\src\\config.ini"
+def get_args_from_config_file_and_overwrite_old_args(args):
+    filename = args.config
 
     config = configparser.ConfigParser()
-    config.read(filename)
-    print(config.sections())
+    config.read_file(filename)
 
-    args.no_remote_repo = bool(config['ARGUMENTS']['no_remote_repo'])
-    args.venv = bool(config['ARGUMENTS']['venv'])
-    args.docs = bool(config['ARGUMENTS']['docs'])
-    args.logs = bool(config['ARGUMENTS']['logs'])
-    args.notes = bool(config['ARGUMENTS']['notes'])
-    args.src = bool(config['ARGUMENTS']['src'])
-    args.tests = bool(config['ARGUMENTS']['tests'])
-    args.gitignore = int(config['ARGUMENTS']['gitignore'])
+    args.no_remote_repo = bool(config['ARGUMENTS'].get("no_remote_repo", args.no_remote_repo))
+    args.venv = bool(config['ARGUMENTS'].get("venv", args.venv))
+    args.docs = bool(config['ARGUMENTS'].get("docs", args.docs))
+    args.logs = bool(config['ARGUMENTS'].get("logs", args.logs))
+    args.notes = bool(config['ARGUMENTS'].get("notes", args.notes))
+    args.src = bool(config['ARGUMENTS'].get("src", args.src))
+    args.tests = bool(config['ARGUMENTS'].get("tests", args.tests))
+    args.gitignore = str(config['ARGUMENTS'].get("gitignore", args.gitignore))
+    args.repo_name = str(config['ARGUMENTS'].get("repo_name", args.repo_name))
+    args.local_directory = str(config['ARGUMENTS'].get("local_directory", args.local_directory))
+
+    return args
+
 
 
 if __name__ == "__main__":
-    args = parse_and_return_args()
-    config_parser()
+    args = get_args_from_terminal()
+    if args.config:
+        args = get_args_from_config_file_and_overwrite_old_args(args)
+
+    print(args.no_remote_repo)
+    print(args.venv)
+    print(args.docs)
+    print(args.logs)
+    print(args.notes)
+    print(args.src)
+    print(args.tests)
+    print(args.gitignore)
+    print(args.repo_name)
+    print(args.local_directory)
+    print()
