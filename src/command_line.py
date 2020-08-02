@@ -27,15 +27,21 @@ def get_parent_directory():
 def parse_arguments():
     pass
     parser = argparse.ArgumentParser(description="A script used to automatically setup a remote github repository and then setup your local repository with all the things that you require, such as a virtual env, src directory, .gitignore file, etc")
-    # parser.add_argument("--no_remote_repo", action="store_true", help="do not create a remote repository, only create a local repository")
-    # parser.add_argument("-n", "--name", )
-    parser.add_argument("--create_remote_repo", metavar="name", nargs="?", const=generate_repo_name_based_upon_parent_directory(), help="create a remote repository on github with your given name")
-
-    parser.add_argument("-d", "--local_directory", )
+    parser.add_argument("--create_remote_repo", metavar="name", nargs="?", const=generate_repo_name_based_upon_parent_directory(), help="create a remote repository on github with your given name, if no name is given, it will default to the name of the cwd")
+    parser.add_argument("-d", "--local_directory", metavar="path", default=os.getcwd(), help="create local repository in chosen path, defaults to cwd if flag is not specified")
+    parser.add_argument("-v", "--venv", action="store_true", help="create a venv")
+    parser.add_argument("--docs", action="store_true", help="create a docs directory")
+    parser.add_argument("--logs", action="store_true", help="create a logs directory")
+    parser.add_argument("--notes", action="store_true", help="create a notes directory")
+    parser.add_argument("--src", action="store_true", help="create a src directory")
+    parser.add_argument("--tests", action="store_true", help="create a tests directory")
+    parser.add_argument("--requirements", action="store_true", help="create a requirements.txt file")
+    parser.add_argument("--gitignore", help="choose a gitignore template")
+    parser.add_argument("-c", "--config", help="enter a config.ini file")
 
 
     args = parser.parse_args()
-
+    # print(args.local_directory)
 
 
 
