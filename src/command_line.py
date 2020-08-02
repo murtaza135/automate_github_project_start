@@ -17,31 +17,44 @@ if __name__ == "__main__":
         gh = MyGithub()
         # gh.create_github_repository(args.repository_name)
 
-    # if args.args.venv:
-    #     os.system("python -m venv .venv")
+    if args.args.venv:
+        print("creating venv...")
+        os.system("python -m venv .venv")
+        os.system("touch .venv.bat")
+        os.system("touch .venv.sh")
+
+        with open(".venv.bat", "w") as f:
+            f.write("@echo off")
+            f.write("\n\n")
+            f.write('".venv/Scripts/activate"')
+
+        with open(".venv.sh", "w") as f:
+            f.write("#!/bin/bash")
+            f.write("\n\n")
+            f.write("source .venv/Scripts/activate")
 
     if args.args.docs:
-        print("docs")
+        print("creating docs directory...")
         os.system("mkdir docs")
 
     if args.args.logs:
-        print("logs")
+        print("creating logs directory...")
         os.system("mkdir logs")
 
     if args.args.notes:
-        print("notes")
+        print("creating notes directory...")
         os.system("mkdir notes")
 
     if args.args.src:
-        print("src")
+        print("creating src directory...")
         os.system("mkdir src")
 
     if args.args.tests:
-        print("tests")
+        print("creating tests directory...")
         os.system("mkdir tests")
 
     if args.args.requirements:
-        print("requirements")
+        print("creating requirements.txt file...")
         os.system("touch requirements.txt")
 
     # if args.args.gitignore:
