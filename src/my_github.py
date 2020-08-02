@@ -11,7 +11,7 @@ class MyGithub:
 
 
     def create_github_repository(self, repository_name):
-        self.repository = user.create_repository(repository_name)
+        self.repository = self.user.create_repo(repository_name)
 
 
     def get_all_gitignore_templates(self):

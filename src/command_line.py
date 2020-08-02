@@ -7,15 +7,14 @@ import os
 
 if __name__ == "__main__":
     args = MyArgs()
-    args.get_args_from_terminal()
     gh = MyGithub()
 
     if args.args.config:
         args.get_args_from_config_file_and_overwrite_old_args()
 
     if not(args.args.no_remote_repository):
-        pass
-        # gh.create_github_repository(args.repository_name)
+        print("creating new remote github repository...")
+        # gh.create_github_repository(args.args.repository_name)
 
     if args.args.venv:
         print("creating venv...")
@@ -71,4 +70,9 @@ if __name__ == "__main__":
             f.write(".venv.sh\n")
             f.write("\n")
 
-        
+    os.system(f'echo # {args.args.repository_name} >> README.md')
+    os.system("git init")
+    os.system("git add .")
+    os.system('git commit -m "initial commit"')
+    # os.system(f"git remote add origin https://github.com/{gh.user.login}/{args.args.repository_name}.git")
+    # os.system("git push -u origin master")

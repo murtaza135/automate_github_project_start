@@ -28,7 +28,7 @@ The program must be able to the following in that exact order:
  - get a .gitignore file from github if the user supplies the corresponding flag and argument
 
  - do the following commands to initialise the local repo:
-	echo "# test" >> README.md
+	echo "# {file name}" >> README.md
 	git init
 	git add .
 	git commit -m "initial commit"
