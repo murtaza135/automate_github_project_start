@@ -8,12 +8,13 @@ import os
 if __name__ == "__main__":
     args = MyArgs()
     args.get_args_from_terminal()
+    gh = MyGithub()
 
     if args.args.config:
         args.get_args_from_config_file_and_overwrite_old_args()
 
     if not(args.args.no_remote_repository):
-        gh = MyGithub()
+        pass
         # gh.create_github_repository(args.repository_name)
 
     if args.args.venv:
@@ -43,8 +44,8 @@ if __name__ == "__main__":
         pass
         # create requirements.txt
 
-    if args.args.gitignore:
-        get_gitignore_file()
+    # if args.args.gitignore:
+    #     gh.get_specific_gitignore_template(args.args.gitignore)
 
 
 

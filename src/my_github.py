@@ -22,6 +22,6 @@ class MyGithub:
         return Github.get_gitignore_templates()
 
 
-    @staticmethod
-    def get_specific_gitignore_template(template_name):
-        return Github.get_gitignore_template(template_name)
+    
+    def get_specific_gitignore_template(self, template_name):
+        return self.gh.get_gitignore_template(template_name)
