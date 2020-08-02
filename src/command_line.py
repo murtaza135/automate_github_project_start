@@ -41,14 +41,23 @@ def parse_and_return_args():
     return args
 
 
-def config_parser(args):
-    config_path = "../defaults.ini"
-    config = configparser.ConfigParser()
-    config.read_file("../defaults.ini")
+def config_parser():
+    filename = "C:\\Users\\murta\\Google Drive\\Murtaza\\Computing\\-- Current Computer Science\\-- CURRENT\\Automate Github Project Start\\src\\config.ini"
 
-    # args.create_remote_repo = 
+    config = configparser.ConfigParser()
+    config.read(filename)
+    print(config.sections())
+
+    args.no_remote_repo = bool(config['ARGUMENTS']['no_remote_repo'])
+    args.venv = bool(config['ARGUMENTS']['venv'])
+    args.docs = bool(config['ARGUMENTS']['docs'])
+    args.logs = bool(config['ARGUMENTS']['logs'])
+    args.notes = bool(config['ARGUMENTS']['notes'])
+    args.src = bool(config['ARGUMENTS']['src'])
+    args.tests = bool(config['ARGUMENTS']['tests'])
+    args.gitignore = int(config['ARGUMENTS']['gitignore'])
 
 
 if __name__ == "__main__":
     args = parse_and_return_args()
-    config_parser(args)
+    config_parser()
