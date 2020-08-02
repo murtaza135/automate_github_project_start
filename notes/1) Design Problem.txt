@@ -12,7 +12,7 @@ The program must be able to the following in that exact order:
  - have the option to pass in a directory in which the the local repository will be set.
    If the user does not pass in an argument, then it will default to the current directory
 
- - create a venv, virtual env or pipenv, if the user supplies the corresponding flag
+ - create a venv, virtual_env or pipenv, if the user supplies the corresponding flag
    a venv.bat and venv.sh scripts must be added in the root directory as well to allow easy access to the venv
 
  - create the following directories if the user supplies the corresponding flags:

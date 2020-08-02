@@ -23,7 +23,9 @@ def generate_repo_name_based_upon_cwd():
 def parse_and_return_args():
     parser = argparse.ArgumentParser(description="A script used to automatically setup a remote github repository and then setup your local repository with all the things that you require, such as a virtual env, src directory, .gitignore file, etc")
     
-    parser.add_argument("--create_remote_repo", metavar="name", nargs="?", const=generate_repo_name_based_upon_cwd(), help="create a remote repository on github with your given name, if no name is given, it will default to the name of the cwd")
+    parser.add_argument("--no_remote_repo", action="store_true", help="do not create a remote github repository, only create a local repository")
+    parser.add_argument("-n", "--repo_name", metavar="name", default=generate_repo_name_based_upon_cwd(), help="choose a name for your remote github repository, defaults to name of cwd, note that this requires the --no_remote_repo flag not to be used")
+    # parser.add_argument("--create_remote_repo", metavar="name", nargs="?", const=generate_repo_name_based_upon_cwd(), help="create a remote repository on github with your given name, if no name is given, it will default to the name of the cwd")
     parser.add_argument("-d", "--local_directory", metavar="path", default=os.getcwd(), help="create local repository in chosen path, defaults to cwd if flag is not specified")
     parser.add_argument("-v", "--venv", action="store_true", help="create a venv")
     parser.add_argument("--docs", action="store_true", help="create a docs directory")
