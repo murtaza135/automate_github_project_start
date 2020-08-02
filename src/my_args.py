@@ -40,6 +40,7 @@ class MyArgs:
         self.args.notes = bool(config['ARGUMENTS'].get("notes", self.args.notes))
         self.args.src = bool(config['ARGUMENTS'].get("src", self.args.src))
         self.args.tests = bool(config['ARGUMENTS'].get("tests", self.args.tests))
+        self.args.requirements = bool(config['ARGUMENTS'].get("requirements", self.args.requirements))
         self.args.gitignore = str(config['ARGUMENTS'].get("gitignore", self.args.gitignore))
         self.args.repository_name = str(config['ARGUMENTS'].get("repository_name", self.args.repository_name))
         self.args.local_directory = str(config['ARGUMENTS'].get("local_directory", self.args.local_directory))
