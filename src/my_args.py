@@ -25,7 +25,7 @@ class MyArgs:
         self.parser.add_argument("--gitignore", type=str, help="choose a gitignore template")
         self.parser.add_argument("-c", "--config", type=argparse.FileType('r'), help="enter a config.ini file")
 
-        self.args = parser.parse_args()
+        self.args = self.parser.parse_args()
 
 
     def get_args_from_config_file_and_overwrite_old_args(self):
