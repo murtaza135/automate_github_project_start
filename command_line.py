@@ -17,7 +17,6 @@ def get_args_from_terminal():
     
     parser.add_argument("--no_remote_repository", action="store_true", help="do not create a remote github repository, only create a local repository")
     parser.add_argument("-n", "--repository_name", metavar="name", type=str, default=generate_repository_name_based_upon_cwd(), help="choose a name for your remote github repository, defaults to name of cwd, note that this requires the --no_remote_repository flag not to be used")
-    # parser.add_argument("--create_remote_repository", metavar="name", nargs="?", const=generate_repository_name_based_upon_cwd(), help="create a remote repository on github with your given name, if no name is given, it will default to the name of the cwd")
     parser.add_argument("-d", "--local_directory", metavar="path", type=str, default=os.getcwd(), help="create local repository in chosen path, defaults to cwd if flag is not specified")
     parser.add_argument("-v", "--venv", action="store_true", help="create a venv")
     parser.add_argument("--docs", action="store_true", help="create a docs directory")
