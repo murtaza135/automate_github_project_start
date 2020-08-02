@@ -1,0 +1,60 @@
+The program must have a command line version and a gui version
+
+
+COMMAND LINE:
+The program must be able to the following in that exact order:
+
+ - Create a github repo
+   if the user supplies a name, that will be used
+   if the user does not supply a name, then the name of the current directory will be used (after it has been made all lowercase and all spaces replaced with '_'
+   if the user does not want to create a remote repository, he must have that option
+
+ - have the option to pass in a directory in which the the local repository will be set.
+   If the user does not pass in an argument, then it will default to the current directory
+
+ - create a venv, virtual env or pipenv, if the user supplies the corresponding flag
+   a venv.bat and venv.sh scripts must be added in the root directory as well to allow easy access to the venv
+
+ - create the following directories if the user supplies the corresponding flags:
+	+ docs
+	+ logs
+	+ notes
+	+ src
+	+ tests
+
+ - create the following files if the user supplies the corresponding flags:
+	+ requirements.txt
+
+ - get a .gitignore file from github if the user supplies the corresponding flag and argument
+
+ - do the following commands to initialise the local repo:
+	echo "# test" >> README.md
+	git init
+	git add .
+	git commit -m "initial commit"
+	git remote add origin https://github.com/{username}/{repository}.git
+	git push -u origin master
+
+ - the program must allow a config file to be passed in
+
+
+
+GUI:
+ - the program must display the following fields:
+	+ location of local repo
+	+ github repo name (automatically set this to directory name of local repo, all lowercase, spaces replaced with '_')
+	  the user then has the choice to change it if he wishes
+	+ checkboxes: select which venv they want, including None
+	+ checkboxes for the following folders and files:
+		+ docs
+		+ logs
+		+ notes
+		+ src
+		+ tests
+		+ requirements.txt
+	+ combobox: which gitignore template file user wants, if any
+	  this must be downloaded from github at start of program
+
+ - program must have config file "defaults.ini" which loads the default options for all fields
+
+ - program must then create all expected files and folders
