@@ -7,7 +7,6 @@ class ScrollableFrame(tk.Frame):
         super().__init__(frame_container, *args, **kwargs)
         self.config(bg=bg)
         self.frame_container = frame_container
-        self.root_controller = root_controller
 
         if scrollbar_container == None: self.scrollbar_container = frame_container
         elif scrollbar_container == "scrollable_frame": self.scrollbar_container = self
