@@ -1,6 +1,7 @@
 from project_creator import ProjectCreator
 import tkinter as tk
 import tkinter.ttk as ttk
+import tk_widgets as wtk
 import tkinter.messagebox as tk_popup
 import tkinter.filedialog as tk_file
 
