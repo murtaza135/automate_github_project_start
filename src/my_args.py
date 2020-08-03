@@ -28,7 +28,7 @@ class MyArgs:
         self.args = self.parser.parse_args()
 
         self.args.local_directory_path = os.path.abspath(self.args.local_directory_path)
-        if self.args.repository_name == None:
+        if self.args.repository_name == None or self.args.repository_name == "":
             self.generate_repository_name_based_upon_directory_name()
 
 

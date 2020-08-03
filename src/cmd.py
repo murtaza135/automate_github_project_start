@@ -10,6 +10,7 @@ if __name__ == "__main__":
     if config_file:
         args.get_args_from_config_file_and_overwrite_old_args()
 
+
     project = ProjectCreator(
         local_repo_only=args.args.local_repo_only,
         repository_name=args.args.repository_name,
