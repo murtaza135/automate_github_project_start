@@ -14,13 +14,13 @@ if __name__ == "__main__":
         local_repo_only=args.args.local_repo_only,
         repository_name=args.args.repository_name,
         local_directory_path=args.args.local_directory_path,
-        no_venv=args.args.no_venv,
-        no_docs=args.args.no_docs,
-        no_logs=args.args.no_logs,
-        no_notes=args.args.no_notes,
-        no_src=args.args.no_src,
-        no_tests=args.args.no_tests,
-        no_requirements=args.args.no_requirements,
+        venv=not(args.args.no_venv),
+        docs=not(args.args.no_docs),
+        logs=not(args.args.no_logs),
+        notes=not(args.args.no_notes),
+        src=not(args.args.no_src),
+        tests=not(args.args.no_tests),
+        requirements=not(args.args.no_requirements),
         gitignore=args.args.gitignore
     )
 
