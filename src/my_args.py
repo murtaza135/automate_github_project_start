@@ -13,7 +13,7 @@ class MyArgs:
         self.parser = argparse.ArgumentParser(description="A script used to automatically setup a remote github repository and then setup your local repository with all the things that you require, such as a virtual env, src directory, .gitignore file, etc")
         
         self.parser.add_argument("-l", "--local_repo_only", action="store_true", help="do not create a remote github repository, only create a local repository")
-        self.parser.add_argument("-n", "--repository_name", metavar="name", type=str, default=type(self).generate_repository_name_based_upon_cwd(), help="choose a name for your remote github repository, defaults to name of cwd, note that this requires the --local_repo_only flag not to be used")
+        self.parser.add_argument("-n", "--repository_name", metavar="name", type=str, default=None, help="choose a name for your remote github repository, defaults to name of cwd, note that this requires the --local_repo_only flag not to be used")
         self.parser.add_argument("-d", "--local_directory_path", metavar="path", type=str, default=os.getcwd(), help="choose path to create local repository, defaults to cwd if flag is not specified")
         self.parser.add_argument("--no_venv", action="store_true", help="do not create a venv")
         self.parser.add_argument("--no_docs", action="store_true", help="do not create a docs directory")
@@ -26,6 +26,10 @@ class MyArgs:
         self.parser.add_argument("-c", "--config", type=argparse.FileType('r'), help="enter a config.ini file")
 
         self.args = self.parser.parse_args()
+
+        self.args.local_directory_path = os.path.abspath(self.args.local_directory_path)
+        if self.args.repository_name == None:
+            self.generate_repository_name_based_upon_directory_name()
 
 
     def get_args_from_config_file_and_overwrite_old_args(self):
@@ -46,8 +50,11 @@ class MyArgs:
         self.args.gitignore = str(config['ARGUMENTS'].get("gitignore", self.args.gitignore))
 
 
-    @staticmethod
-    def generate_repository_name_based_upon_cwd():
-        parent_directory_folder_name = os.path.basename(os.getcwd())
-        parent_directory_folder_name = parent_directory_folder_name.lower().replace(" ", "_")
-        return parent_directory_folder_name
+    def generate_repository_name_based_upon_directory_name(self):
+        if os.path.exists(self.args.local_directory_path):
+            path = os.path.abspath(self.args.local_directory_path)
+            parent_directory_folder_name = os.path.basename(path)
+            parent_directory_folder_name = parent_directory_folder_name.lower().replace(" ", "_")
+            self.args.repository_name = parent_directory_folder_name
+        else:
+            self.args.repository_name = None
