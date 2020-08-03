@@ -21,8 +21,13 @@ class ProjectCreator:
 
 
     def create_project(self):
-        if self.repository_name and self.local_directory_path:
-            # self.create_venv_if_user_agrees()
+        if self.local_directory_path and os.path.exists(self.local_directory_path):
+            os.chdir(self.local_directory_path)
+        else:
+            raise Exception("Error: Please provide a valid path to the directory in which you want to create your local repository")
+
+        if self.repository_name:
+            self.create_venv_if_user_agrees()
             self.create_docs_dir_if_user_agrees()
             self.create_logs_dir_if_user_agrees()
             self.create_notes_dir_if_user_agrees()
@@ -36,7 +41,7 @@ class ProjectCreator:
             # self.push_local_repository_to_remote()
 
         else:
-            raise Exception("Error: Please provide a repository name and the path of the directory in which you want to create your local repository")
+            raise Exception("Error: Please provide a repository name")
 
 
     def init_local_git_repository(self):
