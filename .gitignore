@@ -138,4 +138,4 @@ dmypy.json
 cython_debug/
 
 # others
-src/hi
+src/test
