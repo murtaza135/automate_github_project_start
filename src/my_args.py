@@ -34,6 +34,8 @@ class MyArgs:
         config.read_file(filename)
 
         self.args.local_repo_only = bool(int(config['ARGUMENTS'].get("local_repo_only", self.args.local_repo_only)))
+        self.args.repository_name = str(config['ARGUMENTS'].get("repository_name", self.args.repository_name))
+        self.args.local_directory_path = str(config['ARGUMENTS'].get("local_directory_path", self.args.local_directory_path))
         self.args.no_venv = bool(int(config['ARGUMENTS'].get("no_venv", self.args.no_venv)))
         self.args.no_docs = bool(int(config['ARGUMENTS'].get("no_docs", self.args.no_docs)))
         self.args.no_logs = bool(int(config['ARGUMENTS'].get("no_logs", self.args.no_logs)))
@@ -42,8 +44,6 @@ class MyArgs:
         self.args.no_tests = bool(int(config['ARGUMENTS'].get("no_tests", self.args.no_tests)))
         self.args.no_requirements = bool(int(config['ARGUMENTS'].get("no_requirements", self.args.no_requirements)))
         self.args.gitignore = str(config['ARGUMENTS'].get("gitignore", self.args.gitignore))
-        self.args.repository_name = str(config['ARGUMENTS'].get("repository_name", self.args.repository_name))
-        self.args.local_directory_path = str(config['ARGUMENTS'].get("local_directory_path", self.args.local_directory_path))
 
 
     @staticmethod
