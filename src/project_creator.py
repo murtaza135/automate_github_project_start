@@ -20,6 +20,7 @@ class ProjectCreator:
         self.notes = kwargs["notes"] if "notes" in kwargs else False
         self.src = kwargs["src"] if "src" in kwargs else False
         self.tests = kwargs["tests"] if "tests" in kwargs else False
+        self.images = kwargs["images"] if "images" in kwargs else False # TODO
         self.requirements = kwargs["requirements"] if "requirements" in kwargs else False
         self.gitignore = kwargs["gitignore"] if "gitignore" in kwargs else None
         self.open_vscode = kwargs["open_vscode"] if "open_vscode" in kwargs else False
