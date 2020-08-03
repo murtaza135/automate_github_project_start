@@ -13,11 +13,11 @@ if __name__ == "__main__":
     if args.args.config:
         args.get_args_from_config_file_and_overwrite_old_args()
 
-    if not(args.args.no_remote_repository):
+    if not(args.args.local_repo_only):
         print("creating new remote github repository...")
         # gh.create_github_repository(args.args.repository_name)
 
-    if args.args.venv:
+    if not(args.args.no_venv):
         print("creating venv...")
         os.system("python -m venv .venv")
 
@@ -31,27 +31,27 @@ if __name__ == "__main__":
             f.write("\n\n")
             f.write("source .venv/Scripts/activate")
 
-    if args.args.docs:
+    if not(args.args.no_docs):
         print("creating docs directory...")
         os.system("mkdir docs")
 
-    if args.args.logs:
+    if not(args.args.no_logs):
         print("creating logs directory...")
         os.system("mkdir logs")
 
-    if args.args.notes:
+    if not(args.args.no_notes):
         print("creating notes directory...")
         os.system("mkdir notes")
 
-    if args.args.src:
+    if not(args.args.no_src):
         print("creating src directory...")
         os.system("mkdir src")
 
-    if args.args.tests:
+    if not(args.args.no_tests):
         print("creating tests directory...")
         os.system("mkdir tests")
 
-    if args.args.requirements:
+    if not(args.args.no_requirements):
         print("creating requirements.txt file...")
         with open("requirements.txt", "w") as f: pass
 
