@@ -25,7 +25,7 @@ class MyGithub:
             if template.lower() == template_name.lower():
                 # this is to make sure that the template is retreived regardless of whether the user used uppercase or lowercase letters
                 # as the get_gitignore_template() function below only accepts template names which are EXACTLY the write case
-                # eg. it accepts 'Python', but not 'python' or 'pyTHOn', etc
+                # eg. get_gitignore_template() accepts 'Python', but not 'python' or 'pyTHOn', etc
                 template_name = template
                 break
         else:

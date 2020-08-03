@@ -1,5 +1,6 @@
 from my_github import MyGithub
 import os
+import time
 
 
 class ProjectCreator:
@@ -21,12 +22,12 @@ class ProjectCreator:
 
 
     def create_project(self):
-        if self.local_directory_path and os.path.exists(self.local_directory_path):
+        if type(self.local_directory_path) == str and os.path.exists(self.local_directory_path):
             os.chdir(self.local_directory_path)
         else:
             raise Exception("Error: Please provide a valid path to the directory in which you want to create your local repository")
 
-        if self.repository_name:
+        if type(self.repository_name) == str:
             self.create_venv_with_shortcuts_if_user_agrees()
             self.create_docs_dir_if_user_agrees()
             self.create_logs_dir_if_user_agrees()
@@ -36,9 +37,9 @@ class ProjectCreator:
             self.create_requirements_file_if_user_agrees()
             self.create_specified_gitignore_file_if_any()
 
-            # self.init_local_git_repository()
-            # self.create_remote_repo_if_user_agrees()
-            # self.push_local_repository_to_remote()
+            self.init_local_git_repository()
+            self.create_remote_repo_if_user_agrees()
+            self.push_local_repository_to_remote()
 
         else:
             raise Exception("Error: Please provide a repository name")
