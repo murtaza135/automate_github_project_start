@@ -6,7 +6,7 @@ import configparser
 class MyArgs:
 
     def __init__(self):
-        self.get_args_from_terminal()
+        pass
 
 
     def get_args_from_terminal(self):
