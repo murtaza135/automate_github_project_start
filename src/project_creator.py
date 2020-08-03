@@ -7,7 +7,10 @@ class ProjectCreator:
 
     def __init__(self, **kwargs):
         self.gh = MyGithub()
+        self.set_all_options(**kwargs)
 
+
+    def set_all_options(self, **kwargs):
         self.local_repo_only = kwargs["local_repo_only"] if "local_repo_only" in kwargs else False
         self.repository_name = kwargs["repository_name"] if "repository_name" in kwargs else None
         self.local_directory_path = kwargs["local_directory_path"] if "local_directory_path" in kwargs else None
