@@ -63,7 +63,7 @@ class WidgetFrame(tk.Frame):
 
         self.local_directory_path_frame = tk.Frame(self.widget_frame.scrollable_frame)
         self.local_directory_path_frame.config(**MyTkinterStyle.FRAME)
-        self.local_directory_path_frame.pack(padx=10, pady=(25, 0), anchor="w", fill="x", expand=True)
+        self.local_directory_path_frame.pack(padx=10, pady=(40, 0), anchor="w", fill="x", expand=True)
         self.local_directory_path_frame.grid_columnconfigure(0, weight=1)
 
         self.local_directory_path_label = tk.Label(self.local_directory_path_frame, text="Path to Directory")
@@ -78,7 +78,7 @@ class WidgetFrame(tk.Frame):
         self.local_directory_path_dialog_box_button.config(**MyTkinterStyle.BUTTON)
         self.local_directory_path_dialog_box_button.grid(row=1, column=1, padx=(12, 0), pady=(5, 0), sticky="w")
 
-        self.separator_1 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal")
+        self.separator_1 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal", style="General.Horizontal.TSeparator")
         self.separator_1.pack(padx=10, pady=(25, 0), fill="x", expand=True)
 
         self.local_repo_only_var = tk.IntVar()
@@ -95,7 +95,7 @@ class WidgetFrame(tk.Frame):
         self.repository_name_entry.config(**MyTkinterStyle.ENTRY)
         self.repository_name_entry.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
-        self.separator_2 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal")
+        self.separator_2 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal", style="General.Horizontal.TSeparator")
         self.separator_2.pack(padx=10, pady=(25, 0), fill="x", expand=True)
 
         self.gitignore_combobox_label = tk.Label(self.widget_frame.scrollable_frame, text=".gitignore File")
@@ -104,10 +104,12 @@ class WidgetFrame(tk.Frame):
 
         self.gitignore_combobox_options = ("None",) + ("Python", "C", "C++")
         self.gitignore_combobox = ttk.Combobox(self.widget_frame.scrollable_frame, value=self.gitignore_combobox_options, width=30, style="General.TCombobox", state="readonly")
+        self.gitignore_combobox.option_add("*TCombobox*Listbox*Background", Colour.DARK_3)
+        self.gitignore_combobox.option_add("*TCombobox*Listbox.foreground", Colour.BLUE_2)
         self.gitignore_combobox.set(self.gitignore_combobox_options[0])
         self.gitignore_combobox.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
-        self.separator_3 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal")
+        self.separator_3 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal", style="General.Horizontal.TSeparator")
         self.separator_3.pack(padx=10, pady=(20, 0), fill="x", expand=True)
 
         self.venv_var = tk.IntVar()
@@ -166,4 +168,5 @@ class WidgetFrame(tk.Frame):
 
         self.create_project_button = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
         self.create_project_button.config(**MyTkinterStyle.BUTTON)
+        self.create_project_button.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
         self.create_project_button.pack(padx=10, pady=(40, 40), fill="x", expand=True)
