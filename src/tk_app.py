@@ -1,10 +1,11 @@
 from project_creator import ProjectCreator
 import tkinter as tk
 import tkinter.ttk as ttk
-import tk_widgets as wtk
+import tk_widgets as tkw
 import tk_styles as tks
-import tkinter.messagebox as tk_popup
-import tkinter.filedialog as tk_file
+from tk_tools import TkTools
+import tkinter.messagebox as tkpopup
+import tkinter.filedialog as tkfile
 from PIL import Image, ImageTk
 
 
@@ -45,30 +46,17 @@ class WidgetFrame(tk.Frame):
 
     
     def create_widgets(self):
-        self.widget_frame = wtk.ScrollableFrame(self, scrollbar_container=self.containter, bg="white", canvas_width=400)
+        self.config(bg="black")
+
+        self.widget_frame = tkw.ScrollableFrame(self, scrollbar_container=self.containter, bg="black", canvas_width=450)
         self.widget_frame.pack(side="left", fill="y", expand=True)
         self.widget_frame.canvas.pack(side="top", fill="both", expand=True)
         self.widget_frame.scrollbar.grid(row=0, column=1, sticky="ns")
 
-        # self.img = ImageTk.PhotoImage(Image.open("..\\images\\pinterest_profile_image.png"))
-        self.img = ImageTk.PhotoImage(Image.open("images\\pinterest_profile_image.png"))
-        self.logo = tk.Label(self.widget_frame.scrollable_frame, image=self.img)
+        # self.img = TkTools.get_image_tk_resized("..\\images\\pinterest_profile_image.png")
+        self.img = TkTools.get_image_tk_resized("images/main logo with text - clear background.png", width=385, height=162)
+        self.logo = tk.Label(self.widget_frame.scrollable_frame, image=self.img, bg="black")
         self.logo.pack(padx=10, pady=(20, 0))
-
-        # local_repo_only checkbox
-        # repository_name entry
-        # local_directory_path entry greyed out
-        # button which opens file dialog box to load directory path
-        # gitignore combobox
-        # venv checkbox
-        # docs checkbox
-        # logs checkbox
-        # notes checkbox
-        # src checkbox
-        # tests checkbox
-        # images checkbox
-        # requirements checkbox
-        # open vscode checkbox
 
         self.local_directory_path_frame = tk.Frame(self.widget_frame.scrollable_frame)
         self.local_directory_path_frame.pack(padx=10, pady=(25, 0), anchor="w", fill="x", expand=True)
