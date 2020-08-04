@@ -2,6 +2,7 @@ from project_creator import ProjectCreator
 import tkinter as tk
 import tkinter.ttk as ttk
 import tk_widgets as wtk
+import tk_styles as tks
 import tkinter.messagebox as tk_popup
 import tkinter.filedialog as tk_file
 from PIL import Image, ImageTk
@@ -10,12 +11,9 @@ from PIL import Image, ImageTk
 class TkApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-        self.initialise_controller()
         self.initialise_tk(*args, **kwargs)
+        self.initialise_controller()
         self.create_widget_frame()
-
-    def initialise_controller(self):
-        self.project = ProjectCreator()
 
     def initialise_tk(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,6 +21,11 @@ class TkApp(tk.Tk):
         self.iconbitmap("")
         self.geometry("1024x768")
         self.minsize(1024, 768)
+
+    def initialise_controller(self):
+        self.project = ProjectCreator()
+        self.style = tks.MyTtkStyle("clam")
+        self.style.create_all_premade_styles()
 
     def create_widget_frame(self):
         self.grid_rowconfigure(0, weight=1)
@@ -47,7 +50,8 @@ class WidgetFrame(tk.Frame):
         self.widget_frame.canvas.pack(side="top", fill="both", expand=True)
         self.widget_frame.scrollbar.grid(row=0, column=1, sticky="ns")
 
-        self.img = ImageTk.PhotoImage(Image.open("..\\images\\pinterest_profile_image.png"))
+        # self.img = ImageTk.PhotoImage(Image.open("..\\images\\pinterest_profile_image.png"))
+        self.img = ImageTk.PhotoImage(Image.open("images\\pinterest_profile_image.png"))
         self.logo = tk.Label(self.widget_frame.scrollable_frame, image=self.img)
         self.logo.pack(padx=10, pady=(20, 0))
 
@@ -78,48 +82,37 @@ class WidgetFrame(tk.Frame):
         self.local_directory_path_dialog_box_button = tk.Button(self.local_directory_path_frame, text="...")
         self.local_directory_path_dialog_box_button.grid(row=1, column=1, padx=(5, 0), sticky="w")
 
-        # TODO add tkk.separator
+        self.separator_1 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal")
+        self.separator_1.pack(padx=10, pady=(15, 0), fill="x", expand=True)
 
         self.local_repo_only_var = tk.IntVar()
         self.local_repo_only_var.set(False)
         self.local_repo_only_checkbutton = tk.Checkbutton(self.widget_frame.scrollable_frame, variable=self.local_repo_only_var, text="Local Repository Only?")
-        self.local_repo_only_checkbutton.pack(padx=10, pady=(30, 0), anchor="w")
+        self.local_repo_only_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
 
         self.repository_name_label = tk.Label(self.widget_frame.scrollable_frame, text="Repository Name")
         self.repository_name_label.pack(padx=10, pady=(2, 0), anchor="w")
         self.repository_name_entry = tk.Entry(self.widget_frame.scrollable_frame)
         self.repository_name_entry.pack(padx=10, pady=(2, 0), anchor="w", fill="x", expand=True)
 
-        # TODO add tkk.separator
-        
-        style = ttk.Style()
-        style.theme_use('clam')
-        style.configure("General.TCombobox",
-            background="white",
-            foreground="black",
-        )
-        style.map("General.TCombobox",
-            padding=[("readonly", (7, 8, 0, 8))],
-            focusfill=[("readonly", "white")],
-            selectforeground=[("readonly", "black")],
-            foreground=[('disabled', 'SystemGrayText'), ('readonly', "black")],
-            selectbackground=[("readonly", "white")],
-            fieldbackground=[("readonly", "white")],
-            background=[("readonly", "white")],
-        )
+        self.separator_2 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal")
+        self.separator_2.pack(padx=10, pady=(15, 0), fill="x", expand=True)
 
         self.gitignore_combobox_label = tk.Label(self.widget_frame.scrollable_frame, text=".gitignore File")
-        self.gitignore_combobox_label.pack(padx=10, pady=(30, 0), anchor="w")
+        self.gitignore_combobox_label.pack(padx=10, pady=(15, 0), anchor="w")
 
         self.gitignore_combobox_options = ("None",) + ("Python", "C", "C++")
         self.gitignore_combobox = ttk.Combobox(self.widget_frame.scrollable_frame, value=self.gitignore_combobox_options, width=30, style="General.TCombobox", state="readonly")
         self.gitignore_combobox.set(self.gitignore_combobox_options[0])
         self.gitignore_combobox.pack(padx=10, pady=(2, 0), anchor="w", fill="x", expand=True)
 
+        self.separator_3 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal")
+        self.separator_3.pack(padx=10, pady=(20, 0), fill="x", expand=True)
+
         self.venv_var = tk.IntVar()
         self.venv_var.set(True)
         self.venv_checkbutton = tk.Checkbutton(self.widget_frame.scrollable_frame, variable=self.venv_var, text="Create venv?")
-        self.venv_checkbutton.pack(padx=10, pady=(40, 0), anchor="w")
+        self.venv_checkbutton.pack(padx=10, pady=(20, 0), anchor="w")
 
         self.docs_var = tk.IntVar()
         self.docs_var.set(True)
@@ -159,4 +152,7 @@ class WidgetFrame(tk.Frame):
         self.open_vscode_var = tk.IntVar()
         self.open_vscode_var.set(True)
         self.open_vscode_checkbutton = tk.Checkbutton(self.widget_frame.scrollable_frame, variable=self.open_vscode_var, text="Open vscode?")
-        self.open_vscode_checkbutton.pack(padx=10, pady=(15, 40), anchor="w")
+        self.open_vscode_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+
+        self.create_project_button = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
+        self.create_project_button.pack(padx=10, pady=(40, 40), fill="x", expand=True)
