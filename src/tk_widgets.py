@@ -21,7 +21,6 @@ class ScrollableFrame(tk.Frame):
         self.scrollable_frame.bind("<Configure>", lambda event: self.canvas.configure(scrollregion=self.canvas.bbox("all"))) # make sure canvas scroll region covers the entire scrollable_frame even when its size changes
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.configure(command=self.canvas.yview)
-        self.scrollbar.bind_mousewheel_y(self.canvas)
     
 
     def pack_frame(self, frame_side="left", canvas_side="top", scrollbar_side="right", frame_fill="y"):
@@ -44,6 +43,9 @@ class ScrollableFrame(tk.Frame):
 
     def configure(self, bg="white", cnf=None, **kwargs):
         self.config(bg, cnf, **kwargs)
+
+    def bind_mousewheel(self, scroll_activate_area):
+        self.scrollbar.bind_mousewheel_y(scroll_activate_area, self.canvas)
 
 
 
@@ -98,9 +100,9 @@ class AutohideScrollbar(tk.Scrollbar):
         raise tk.TclError("cannot use 'place' with this widget")
 
 
-    def bind_mousewheel_y(self, scrolled_widget):
-        self.container.bind("<Enter>", lambda event: scrolled_widget.bind_all("<MouseWheel>", lambda event: self.on_mousewheel_y(event, scrolled_widget)))
-        self.container.bind("<Leave>", lambda event: scrolled_widget.unbind_all("<MouseWheel>"))
+    def bind_mousewheel_y(self, scroll_activate_area, scrolled_widget):
+        scroll_activate_area.bind("<Enter>", lambda event: scrolled_widget.bind_all("<MouseWheel>", lambda event: self.on_mousewheel_y(event, scrolled_widget)))
+        scroll_activate_area.bind("<Leave>", lambda event: scrolled_widget.unbind_all("<MouseWheel>"))
 
     def on_mousewheel_y(self, event, scrolled_widget):
         # BUG: for some reason, when the mouse pointer is on the scrollbar itself

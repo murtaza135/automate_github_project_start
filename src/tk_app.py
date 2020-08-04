@@ -51,6 +51,7 @@ class WidgetFrame(tk.Frame):
 
         self.widget_frame = tkw.ScrollableFrame(self, scrollbar_container=self.containter, canvas_width=410)
         self.widget_frame.config(**MyTkinterStyle.FRAME)
+        self.widget_frame.bind_mousewheel(self)
         self.widget_frame.pack(side="left", fill="y", expand=True)
         self.widget_frame.canvas.pack(side="top", fill="both", expand=True)
         self.widget_frame.scrollbar.grid(row=0, column=1, sticky="ns")
