@@ -5,7 +5,7 @@ class ScrollableFrame(tk.Frame):
 
     def __init__(self, frame_container, scrollbar_container=None, bg="white", canvas_width=300, scrollbar_geometry_manager="grid", *args, **kwargs):
         super().__init__(frame_container, *args, **kwargs)
-        self.config(bg=bg)
+        super().config(bg=bg)
         self.frame_container = frame_container
 
         if scrollbar_container == None: self.scrollbar_container = frame_container
@@ -33,6 +33,17 @@ class ScrollableFrame(tk.Frame):
 
     def place_frame(self, **kwargs):
         raise tk.TclError("cannot use place with this widget")
+
+    def config(self, bg="white", cnf=None, **kwargs):
+        bg = kwargs["background"] if "background" in kwargs else bg
+        super().config(cnf=cnf, **kwargs)
+        super().config(bg=bg)
+        self.canvas.config(bg=bg)
+        self.scrollable_frame.config(bg=bg)
+
+    def configure(self, bg="white", cnf=None, **kwargs):
+        self.config(bg, cnf, **kwargs)
+
 
 
 class AutohideScrollbar(tk.Scrollbar):
