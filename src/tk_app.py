@@ -83,8 +83,14 @@ class WidgetFrame(tk.Frame):
 
         self.local_repo_only_var = tk.IntVar()
         self.local_repo_only_var.set(False)
-        self.local_repo_only_checkbutton = tk.Checkbutton(self.widget_frame.scrollable_frame, variable=self.local_repo_only_var, text="Local Repository Only?")
-        self.local_repo_only_checkbutton.config(**MyTkinterStyle.CHECKBUTTON)
+        # self.local_repo_only_checkbutton = tk.Checkbutton(self.widget_frame.scrollable_frame, variable=self.local_repo_only_var, text="Local Repository Only?")
+        # self.local_repo_only_checkbutton.config(**MyTkinterStyle.CHECKBUTTON)
+        # self.local_repo_only_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+
+        self.local_repo_only_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
+        self.local_repo_only_checkbutton.config_frame(**MyTkinterStyle.FRAME)
+        self.local_repo_only_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.local_repo_only_var)
+        self.local_repo_only_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Local Repository Only?")
         self.local_repo_only_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
 
         self.repository_name_label = tk.Label(self.widget_frame.scrollable_frame, text="Repository Name")

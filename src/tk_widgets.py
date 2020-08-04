@@ -4,6 +4,7 @@ import tkinter as tk
 class ScrollableFrame(tk.Frame):
 
     def __init__(self, frame_container, scrollbar_container=None, bg="white", canvas_width=300, scrollbar_geometry_manager="grid", *args, **kwargs):
+        bg = kwargs.pop("background", bg)
         super().__init__(frame_container, *args, **kwargs)
         super().config(bg=bg)
         self.frame_container = frame_container
@@ -123,3 +124,37 @@ class AutohideScrollbar(tk.Scrollbar):
         # if neither the lowest point of the scrollbar is at the bottom nor the highest is at the top
         elif low > 0 and high < 1:
             scrolled_widget.yview_scroll(units, "units")
+
+
+class TextSeparatedCheckbutton(tk.Frame):
+
+    def __init__(self, container, cnf={}):
+        super().__init__(container, cnf)
+        self.container = container
+        self.create_widgets_in_default_state()
+
+    def create_widgets_in_default_state(self):
+        self.checkbutton = tk.Checkbutton(self)
+        self.text_label = tk.Label(self)
+
+    def config_frame(self, **kwargs):
+        self.config(**kwargs)
+
+    def config_checkbutton(self, **kwargs):
+        self.checkbutton.config(**kwargs)
+
+    def config_text_label(self, **kwargs):
+        self.text_label.config(**kwargs)
+
+    def pack(self, *args, **kwargs):
+        super().pack(*args, **kwargs)
+        self.checkbutton.pack(side="left")
+        self.text_label.pack(side="right", fill="x", expand=True)
+
+    def grid(self, *args, **kwargs):
+        super().grid(*args, **kwargs)
+        self.checkbutton.pack(side="left")
+        self.text_label.pack(side="right", fill="x", expand=True)
+
+    def place(self, **kwargs):
+        raise tk.TclError("cannot use 'place' with this widget")
