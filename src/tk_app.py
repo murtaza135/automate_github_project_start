@@ -7,6 +7,7 @@ from tk_styles import Colour, MyTkinterStyle, MyTtkStyle
 from tk_tools import TkTools
 import tkinter.messagebox as tkpopup
 import tkinter.filedialog as tkfile
+from github import Github
 
 
 class TkApp(tk.Tk):
@@ -101,7 +102,7 @@ class WidgetFrame(tk.Frame):
         self.gitignore_combobox_label.config(**MyTkinterStyle.LABEL)
         self.gitignore_combobox_label.pack(padx=10, pady=(30, 0), anchor="w")
 
-        self.gitignore_combobox_options = ("None",) + ("Python", "C", "C++")
+        self.gitignore_combobox_options = self.get_gitiginore_templates_from_github()
         self.gitignore_combobox = ttk.Combobox(self.widget_frame.scrollable_frame, value=self.gitignore_combobox_options, width=30, style="General.TCombobox", state="readonly")
         self.gitignore_combobox.option_add("*TCombobox*Listbox*Background", Colour.DARK_3)
         self.gitignore_combobox.option_add("*TCombobox*Listbox.foreground", Colour.BLUE_2)
@@ -197,6 +198,17 @@ class WidgetFrame(tk.Frame):
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
         self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
 
+
+    @staticmethod
+    def get_gitiginore_templates_from_github():
+        try:
+            gh = Github(timeout=5)
+            gitignore_templates = gh.get_gitignore_templates()
+            gitignore_templates.insert(0, "None")
+            return gitignore_templates
+        except:
+            tkpopup.showerror("Error", "Could not retrieve .gitignore templates from Github")
+            return ["None", "Python"]
 
     def get_local_directory_path(self):
         directory_path = tkfile.askdirectory(title="Choose Project Path")
