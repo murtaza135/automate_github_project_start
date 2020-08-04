@@ -21,8 +21,8 @@ class TkApp(tk.Tk):
         self.title("Automate Github Project Start")
         # self.iconbitmap("../images/icon.ico")
         self.iconbitmap("images/icon.ico")
-        self.geometry("1024x768")
-        self.minsize(1024, 768)
+        self.geometry("575x740") # "575x685"
+        self.minsize(575, 685)
 
     def initialise_controller(self):
         self.project = ProjectCreator()
@@ -49,7 +49,7 @@ class WidgetFrame(tk.Frame):
     def create_widgets(self):
         self.config(**MyTkinterStyle.FRAME)
 
-        self.widget_frame = tkw.ScrollableFrame(self, scrollbar_container=self.containter, canvas_width=450)
+        self.widget_frame = tkw.ScrollableFrame(self, scrollbar_container=self.containter, canvas_width=410)
         self.widget_frame.config(**MyTkinterStyle.FRAME)
         self.widget_frame.pack(side="left", fill="y", expand=True)
         self.widget_frame.canvas.pack(side="top", fill="both", expand=True)
@@ -59,7 +59,7 @@ class WidgetFrame(tk.Frame):
         self.img = TkTools.get_image_tk_resized("images/main logo with text - clear background.png", width=385, height=162)
         self.logo = tk.Label(self.widget_frame.scrollable_frame, image=self.img)
         self.logo.config(**MyTkinterStyle.IMAGE)
-        self.logo.pack(padx=10, pady=(20, 0))
+        self.logo.pack(padx=10, pady=(30, 0))
 
         self.local_directory_path_frame = tk.Frame(self.widget_frame.scrollable_frame)
         self.local_directory_path_frame.config(**MyTkinterStyle.FRAME)
@@ -78,31 +78,25 @@ class WidgetFrame(tk.Frame):
         self.local_directory_path_dialog_box_button.config(**MyTkinterStyle.BUTTON)
         self.local_directory_path_dialog_box_button.grid(row=1, column=1, padx=(12, 0), pady=(5, 0), sticky="w")
 
-        self.separator_1 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal", style="General.Horizontal.TSeparator")
-        self.separator_1.pack(padx=10, pady=(25, 0), fill="x", expand=True)
-
         self.local_repo_only_var = tk.IntVar()
         self.local_repo_only_var.set(False)
         self.local_repo_only_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.local_repo_only_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.local_repo_only_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.local_repo_only_var)
         self.local_repo_only_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Local Repository Only?")
-        self.local_repo_only_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.local_repo_only_checkbutton.pack(padx=10, pady=(30, 0), anchor="w")
 
         self.repository_name_label = tk.Label(self.widget_frame.scrollable_frame, text="Repository Name")
         self.repository_name_label.config(**MyTkinterStyle.LABEL)
-        self.repository_name_label.pack(padx=10, pady=(12, 0), anchor="w")
+        self.repository_name_label.pack(padx=10, pady=(7, 0), anchor="w")
 
         self.repository_name_entry = tk.Entry(self.widget_frame.scrollable_frame)
         self.repository_name_entry.config(**MyTkinterStyle.ENTRY)
         self.repository_name_entry.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
-        self.separator_2 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal", style="General.Horizontal.TSeparator")
-        self.separator_2.pack(padx=10, pady=(25, 0), fill="x", expand=True)
-
         self.gitignore_combobox_label = tk.Label(self.widget_frame.scrollable_frame, text=".gitignore File")
         self.gitignore_combobox_label.config(**MyTkinterStyle.LABEL)
-        self.gitignore_combobox_label.pack(padx=10, pady=(15, 0), anchor="w")
+        self.gitignore_combobox_label.pack(padx=10, pady=(30, 0), anchor="w")
 
         self.gitignore_combobox_options = ("None",) + ("Python", "C", "C++")
         self.gitignore_combobox = ttk.Combobox(self.widget_frame.scrollable_frame, value=self.gitignore_combobox_options, width=30, style="General.TCombobox", state="readonly")
@@ -111,8 +105,17 @@ class WidgetFrame(tk.Frame):
         self.gitignore_combobox.set(self.gitignore_combobox_options[0])
         self.gitignore_combobox.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
-        self.separator_3 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal", style="General.Horizontal.TSeparator")
-        self.separator_3.pack(padx=10, pady=(20, 0), fill="x", expand=True)
+        self.create_project_button_1 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
+        self.create_project_button_1.config(**MyTkinterStyle.BUTTON)
+        self.create_project_button_1.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
+        self.create_project_button_1.pack(padx=10, pady=(50, 0), fill="x", expand=True)
+
+        self.separator_1 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal", style="General.Horizontal.TSeparator")
+        self.separator_1.pack(padx=10, pady=(30, 0), fill="x", expand=True)
+
+        self.extra_options_label = tk.Label(self.widget_frame.scrollable_frame, text="Extra Options:")
+        self.extra_options_label.config(**MyTkinterStyle.LABEL)
+        self.extra_options_label.pack(padx=10, pady=(50, 0), anchor="w")
 
         self.venv_var = tk.IntVar()
         self.venv_var.set(True)
@@ -120,7 +123,7 @@ class WidgetFrame(tk.Frame):
         self.venv_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.venv_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.venv_var)
         self.venv_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create venv?")
-        self.venv_checkbutton.pack(padx=10, pady=(20, 0), anchor="w")
+        self.venv_checkbutton.pack(padx=20, pady=(20, 0), anchor="w")
 
         self.docs_var = tk.IntVar()
         self.docs_var.set(True)
@@ -128,7 +131,7 @@ class WidgetFrame(tk.Frame):
         self.docs_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.docs_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.docs_var)
         self.docs_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a docs directory?")
-        self.docs_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.docs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.logs_var = tk.IntVar()
         self.logs_var.set(True)
@@ -136,7 +139,7 @@ class WidgetFrame(tk.Frame):
         self.logs_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.logs_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.logs_var)
         self.logs_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a logs directory?")
-        self.logs_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.logs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.notes_var = tk.IntVar()
         self.notes_var.set(True)
@@ -144,7 +147,7 @@ class WidgetFrame(tk.Frame):
         self.notes_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.notes_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.notes_var)
         self.notes_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a notes directory?")
-        self.notes_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.notes_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.src_var = tk.IntVar()
         self.src_var.set(True)
@@ -152,7 +155,7 @@ class WidgetFrame(tk.Frame):
         self.src_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.src_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.src_var)
         self.src_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a src directory?")
-        self.src_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.src_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.tests_var = tk.IntVar()
         self.tests_var.set(True)
@@ -160,7 +163,7 @@ class WidgetFrame(tk.Frame):
         self.tests_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.tests_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.tests_var)
         self.tests_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a tests directory?")
-        self.tests_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.tests_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.images_var = tk.IntVar()
         self.images_var.set(True)
@@ -168,7 +171,7 @@ class WidgetFrame(tk.Frame):
         self.images_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.images_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.images_var)
         self.images_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create an images directory?")
-        self.images_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.images_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.requirements_var = tk.IntVar()
         self.requirements_var.set(True)
@@ -176,7 +179,7 @@ class WidgetFrame(tk.Frame):
         self.requirements_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.requirements_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.requirements_var)
         self.requirements_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a requirements.txt file?")
-        self.requirements_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.requirements_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.open_vscode_var = tk.IntVar()
         self.open_vscode_var.set(True)
@@ -184,9 +187,9 @@ class WidgetFrame(tk.Frame):
         self.open_vscode_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.open_vscode_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.open_vscode_var)
         self.open_vscode_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Open vscode?")
-        self.open_vscode_checkbutton.pack(padx=10, pady=(15, 0), anchor="w")
+        self.open_vscode_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
-        self.create_project_button = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
-        self.create_project_button.config(**MyTkinterStyle.BUTTON)
-        self.create_project_button.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
-        self.create_project_button.pack(padx=10, pady=(40, 40), fill="x", expand=True)
+        self.create_project_button_2 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
+        self.create_project_button_2.config(**MyTkinterStyle.BUTTON)
+        self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
+        self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
