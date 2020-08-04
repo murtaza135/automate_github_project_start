@@ -73,11 +73,11 @@ class WidgetFrame(tk.Frame):
 
         self.local_directory_path_entry = tk.Entry(self.local_directory_path_frame, state="readonly")
         self.local_directory_path_entry.config(**MyTkinterStyle.ENTRY)
-        # self.local_directory_path_entry.xview_moveto(1)
+        self.local_directory_path_entry.xview_moveto(1)
         self.local_directory_path_entry.grid(row=1, column=0, pady=(5, 0), sticky="we")
 
         self.local_directory_path_dialog_box_button = tk.Button(self.local_directory_path_frame, text="...")
-        self.local_directory_path_dialog_box_button.config(**MyTkinterStyle.BUTTON)
+        self.local_directory_path_dialog_box_button.config(**MyTkinterStyle.BUTTON, command=self.get_local_directory_path)
         self.local_directory_path_dialog_box_button.grid(row=1, column=1, padx=(12, 0), pady=(5, 0), sticky="w")
 
         self.local_repo_only_var = tk.IntVar()
@@ -196,6 +196,15 @@ class WidgetFrame(tk.Frame):
         self.create_project_button_2.config(**MyTkinterStyle.BUTTON)
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
         self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
+
+
+    def get_local_directory_path(self):
+        directory_path = tkfile.askdirectory(title="Choose Project Path")
+        self.local_directory_path_entry.config(state="normal")
+        self.local_directory_path_entry.delete(0, "end")
+        self.local_directory_path_entry.insert("end", directory_path.strip())
+        self.local_directory_path_entry.xview_moveto(1)
+        self.local_directory_path_entry.config(state="readonly")
 
     def activate_deactivate_repository_name_entry(self):
         if self.local_repo_only_var.get() == False:
