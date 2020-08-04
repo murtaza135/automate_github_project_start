@@ -23,6 +23,55 @@ class Colour:
     WARNING = "yellow"
 
 
+class MyTkinterStyle:
+
+    FRAME = {
+        "bg": Colour.DARK_3
+    }
+
+    LABEL = {
+        "font": ("Verdana", 12),
+        "height": 1,
+        "anchor": "w",
+        "padx": 0,
+        "bg": Colour.DARK_3,
+        "fg": Colour.BLUE_2,
+        "relief": "flat"
+    }
+
+    ENTRY = {
+        "font": ("Verdana", 18),
+        "bg": Colour.DARK_3,
+        "readonlybackground": Colour.DARK_3,
+        "disabledbackground": Colour.GREY_2,
+        "fg": Colour.BLUE_2,
+        "highlightcolor": Colour.BLUE_2,
+        "highlightbackground": Colour.BLUE_2,
+        "highlightthickness": 2,
+        "relief": "flat"
+    }
+
+    BUTTON = {
+        "font": ("Verdana", 13),
+        "height": 1,
+        "anchor": "center",
+        "padx": 10,
+        "bg": Colour.GREY_1,
+        "fg": Colour.BLUE_2,
+        "relief": "raised"
+    }
+
+    CHECKBUTTON = {
+        "font": ("Verdana", 12),
+        "bg": Colour.DARK_3,
+        "fg": Colour.BLUE_2
+    }
+
+    IMAGE = {
+        "bg": Colour.DARK_3
+    }
+
+
 class MyTtkStyle(ttk.Style):
         
     def __init__(self, theme):
@@ -55,54 +104,3 @@ class MyTtkStyle(ttk.Style):
             background=Colour.BLUE_2,
             foreground=Colour.BLUE_2,
         )
-
-
-class MyTkinterStyle:
-
-    FRAME = {
-        "bg": Colour.DARK_3
-    }
-
-    LABEL = {
-        "font": ("Verdana", 12),
-        "height": 1,
-        "anchor": "w",
-        "padx": 0,
-        "bg": Colour.DARK_3,
-        "fg": Colour.BLUE_2,
-        "relief": "flat"
-    }
-
-    ENTRY = {
-        "font": ("Verdana", 18),
-        "width": 0,
-        "bg": Colour.DARK_3,
-        "readonlybackground": Colour.DARK_3,
-        "disabledbackground": Colour.GREY_2,
-        "fg": Colour.BLUE_2,
-        "highlightcolor": Colour.BLUE_2,
-        "highlightbackground": Colour.BLUE_2,
-        "highlightthickness": 2,
-        "relief": "flat"
-    }
-
-    BUTTON = {
-        "font": ("Verdana", 13),
-        "width": 0,
-        "height": 1,
-        "anchor": "center",
-        "padx": 10,
-        "bg": Colour.GREY_1,
-        "fg": Colour.BLUE_2,
-        "relief": "raised"
-    }
-
-    CHECKBUTTON = {
-        "font": ("Verdana", 12),
-        "bg": Colour.DARK_3,
-        "fg": Colour.BLUE_2
-    }
-
-    IMAGE = {
-        "bg": Colour.DARK_3
-    }

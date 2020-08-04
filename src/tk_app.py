@@ -72,6 +72,7 @@ class WidgetFrame(tk.Frame):
 
         self.local_directory_path_entry = tk.Entry(self.local_directory_path_frame, state="readonly")
         self.local_directory_path_entry.config(**MyTkinterStyle.ENTRY)
+        # self.local_directory_path_entry.xview_moveto(1)
         self.local_directory_path_entry.grid(row=1, column=0, pady=(5, 0), sticky="we")
 
         self.local_directory_path_dialog_box_button = tk.Button(self.local_directory_path_frame, text="...")
