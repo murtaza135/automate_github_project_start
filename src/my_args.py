@@ -21,9 +21,11 @@ class MyArgs:
         self.parser.add_argument("--no_notes", action="store_true", help="do not create a notes directory")
         self.parser.add_argument("--no_src", action="store_true", help="do not create a src directory")
         self.parser.add_argument("--no_tests", action="store_true", help="do not create a tests directory")
+        self.parser.add_argument("--no_images", action="store_true", help="do not create an images directory")
+        self.parser.add_argument("--no_config", action="store_true", help="do not create a config directory")
         self.parser.add_argument("--no_requirements", action="store_true", help="create a requirements.txt file")
         self.parser.add_argument("-g", "--gitignore", type=str, help="choose a gitignore template")
-        self.parser.add_argument("-c", "--config", type=argparse.FileType('r'), help="enter a config.ini file")
+        self.parser.add_argument("-c", "--config", action="store_true", help="use default values from config file (cmd_defaults.ini)")
 
         self.args = self.parser.parse_args()
 
@@ -33,9 +35,10 @@ class MyArgs:
 
 
     def get_args_from_config_file_and_overwrite_old_args(self):
-        filename = self.args.config
+        # CONFIG_FILE = "../config/cmd_defaults.ini"
+        CONFIG_FILE = "config/cmd_defaults.ini"
         config = configparser.ConfigParser()
-        config.read_file(filename)
+        config.read(CONFIG_FILE)
 
         self.args.local_repo_only = bool(int(config['ARGUMENTS'].get("local_repo_only", self.args.local_repo_only)))
         self.args.repository_name = str(config['ARGUMENTS'].get("repository_name", self.args.repository_name))
@@ -46,8 +49,14 @@ class MyArgs:
         self.args.no_notes = bool(int(config['ARGUMENTS'].get("no_notes", self.args.no_notes)))
         self.args.no_src = bool(int(config['ARGUMENTS'].get("no_src", self.args.no_src)))
         self.args.no_tests = bool(int(config['ARGUMENTS'].get("no_tests", self.args.no_tests)))
+        self.args.no_images = bool(int(config['ARGUMENTS'].get("no_images", self.args.no_images)))
+        self.args.no_config = bool(int(config['ARGUMENTS'].get("no_config", self.args.no_config)))
         self.args.no_requirements = bool(int(config['ARGUMENTS'].get("no_requirements", self.args.no_requirements)))
         self.args.gitignore = str(config['ARGUMENTS'].get("gitignore", self.args.gitignore))
+
+        if self.args.repository_name == "": self.args.repository_name = None
+        if self.args.local_directory_path == "": self.args.local_directory_path = os.path.abspath(self.args.local_directory_path)
+        if self.args.gitignore == "": self.args.gitignore = None
 
 
     def generate_repository_name_based_upon_directory_name(self):

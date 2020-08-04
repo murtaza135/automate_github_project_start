@@ -12,7 +12,7 @@ class ProjectCreator:
 
     def set_all_options(self, **kwargs):
         self.local_repo_only = kwargs["local_repo_only"] if "local_repo_only" in kwargs else False
-        self.repository_name = kwargs["repository_name"] if "repository_name" in kwargs else None
+        self.repository_name = kwargs["repository_name"] if "repository_name" in kwargs and kwargs["repository_name"] != "" else None
         self.local_directory_path = kwargs["local_directory_path"] if "local_directory_path" in kwargs else None
         self.venv = kwargs["venv"] if "venv" in kwargs else False
         self.docs = kwargs["docs"] if "docs" in kwargs else False
@@ -20,7 +20,8 @@ class ProjectCreator:
         self.notes = kwargs["notes"] if "notes" in kwargs else False
         self.src = kwargs["src"] if "src" in kwargs else False
         self.tests = kwargs["tests"] if "tests" in kwargs else False
-        self.images = kwargs["images"] if "images" in kwargs else False # TODO
+        self.images = kwargs["images"] if "images" in kwargs else False
+        self.config = kwargs["config"] if "config" in kwargs else False
         self.requirements = kwargs["requirements"] if "requirements" in kwargs else False
         self.gitignore = kwargs["gitignore"] if "gitignore" in kwargs else None
         self.open_vscode = kwargs["open_vscode"] if "open_vscode" in kwargs else False
@@ -39,6 +40,8 @@ class ProjectCreator:
             self.create_notes_dir_if_user_agrees()
             self.create_src_dir_if_user_agrees()
             self.create_tests_dir_if_user_agrees()
+            self.create_images_dir_if_user_agrees()
+            self.create_config_dir_if_user_agrees()
             self.create_requirements_file_if_user_agrees()
             self.create_specified_gitignore_file_if_any()
 
@@ -117,6 +120,18 @@ class ProjectCreator:
         if self.tests:
             print("creating tests directory...")
             os.system("mkdir tests")
+
+
+    def create_images_dir_if_user_agrees(self):
+        if self.images:
+            print("creating images directory...")
+            os.system("mkdir images")
+
+
+    def create_config_dir_if_user_agrees(self):
+        if self.config:
+            print("creating config directory...")
+            os.system("mkdir config")
 
 
     def create_requirements_file_if_user_agrees(self):

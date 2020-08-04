@@ -21,6 +21,8 @@ if __name__ == "__main__":
         notes=not(args.args.no_notes),
         src=not(args.args.no_src),
         tests=not(args.args.no_tests),
+        images=not(args.args.no_images),
+        config=not(args.args.no_config),
         requirements=not(args.args.no_requirements),
         gitignore=args.args.gitignore
     )

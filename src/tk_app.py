@@ -8,6 +8,8 @@ from tk_tools import TkTools
 import tkinter.messagebox as tkpopup
 import tkinter.filedialog as tkfile
 from github import Github
+import configparser
+import os
 
 
 class TkApp(tk.Tk):
@@ -44,6 +46,7 @@ class WidgetFrame(tk.Frame):
         self.containter = container
         self.controller = controller
 
+        self.default_options = self.get_defaults_from_config_file()
         self.create_widgets()
 
     
@@ -72,8 +75,9 @@ class WidgetFrame(tk.Frame):
         self.local_directory_path_label.config(**MyTkinterStyle.LABEL)
         self.local_directory_path_label.grid(row=0, column=0, columnspan=2, sticky="w")
 
-        self.local_directory_path_entry = tk.Entry(self.local_directory_path_frame, state="readonly")
-        self.local_directory_path_entry.config(**MyTkinterStyle.ENTRY)
+        self.local_directory_path_entry = tk.Entry(self.local_directory_path_frame)
+        self.local_directory_path_entry.insert("end", os.path.abspath(self.default_options["local_directory_path"]))
+        self.local_directory_path_entry.config(**MyTkinterStyle.ENTRY, state="readonly")
         self.local_directory_path_entry.xview_moveto(1)
         self.local_directory_path_entry.grid(row=1, column=0, pady=(5, 0), sticky="we")
 
@@ -82,7 +86,7 @@ class WidgetFrame(tk.Frame):
         self.local_directory_path_dialog_box_button.grid(row=1, column=1, padx=(12, 0), pady=(5, 0), sticky="w")
 
         self.local_repo_only_var = tk.IntVar()
-        self.local_repo_only_var.set(False)
+        self.local_repo_only_var.set(self.default_options["local_repo_only"])
         self.local_repo_only_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.local_repo_only_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.local_repo_only_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.local_repo_only_var)
@@ -96,6 +100,7 @@ class WidgetFrame(tk.Frame):
 
         self.repository_name_entry = tk.Entry(self.widget_frame.scrollable_frame)
         self.repository_name_entry.config(**MyTkinterStyle.ENTRY)
+        self.repository_name_entry.insert("end", self.default_options["repository_name"])
         self.repository_name_entry.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
         self.gitignore_combobox_label = tk.Label(self.widget_frame.scrollable_frame, text=".gitignore File")
@@ -106,7 +111,7 @@ class WidgetFrame(tk.Frame):
         self.gitignore_combobox = ttk.Combobox(self.widget_frame.scrollable_frame, value=self.gitignore_combobox_options, width=30, style="General.TCombobox", state="readonly")
         self.gitignore_combobox.option_add("*TCombobox*Listbox*Background", Colour.DARK_3)
         self.gitignore_combobox.option_add("*TCombobox*Listbox.foreground", Colour.BLUE_2)
-        self.gitignore_combobox.set(self.gitignore_combobox_options[0])
+        self.gitignore_combobox.set(self.default_options["gitignore"])
         self.gitignore_combobox.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
         self.create_project_button_1 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
@@ -122,7 +127,7 @@ class WidgetFrame(tk.Frame):
         self.extra_options_label.pack(padx=10, pady=(50, 0), anchor="w")
 
         self.venv_var = tk.IntVar()
-        self.venv_var.set(True)
+        self.venv_var.set(self.default_options["venv"])
         self.venv_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.venv_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.venv_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.venv_var)
@@ -130,7 +135,7 @@ class WidgetFrame(tk.Frame):
         self.venv_checkbutton.pack(padx=20, pady=(20, 0), anchor="w")
 
         self.docs_var = tk.IntVar()
-        self.docs_var.set(True)
+        self.docs_var.set(self.default_options["docs"])
         self.docs_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.docs_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.docs_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.docs_var)
@@ -138,7 +143,7 @@ class WidgetFrame(tk.Frame):
         self.docs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.logs_var = tk.IntVar()
-        self.logs_var.set(True)
+        self.logs_var.set(self.default_options["logs"])
         self.logs_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.logs_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.logs_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.logs_var)
@@ -146,7 +151,7 @@ class WidgetFrame(tk.Frame):
         self.logs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.notes_var = tk.IntVar()
-        self.notes_var.set(True)
+        self.notes_var.set(self.default_options["notes"])
         self.notes_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.notes_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.notes_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.notes_var)
@@ -154,7 +159,7 @@ class WidgetFrame(tk.Frame):
         self.notes_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.src_var = tk.IntVar()
-        self.src_var.set(True)
+        self.src_var.set(self.default_options["src"])
         self.src_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.src_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.src_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.src_var)
@@ -162,7 +167,7 @@ class WidgetFrame(tk.Frame):
         self.src_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.tests_var = tk.IntVar()
-        self.tests_var.set(True)
+        self.tests_var.set(self.default_options["tests"])
         self.tests_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.tests_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.tests_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.tests_var)
@@ -170,15 +175,23 @@ class WidgetFrame(tk.Frame):
         self.tests_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.images_var = tk.IntVar()
-        self.images_var.set(True)
+        self.images_var.set(self.default_options["images"])
         self.images_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.images_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.images_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.images_var)
         self.images_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create an images directory?")
         self.images_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
+        self.config_var = tk.IntVar()
+        self.config_var.set(self.default_options["config"])
+        self.config_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
+        self.config_checkbutton.config_frame(**MyTkinterStyle.FRAME)
+        self.config_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.config_var)
+        self.config_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a config directory?")
+        self.config_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+
         self.requirements_var = tk.IntVar()
-        self.requirements_var.set(True)
+        self.requirements_var.set(self.default_options["requirements"])
         self.requirements_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.requirements_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.requirements_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.requirements_var)
@@ -186,7 +199,7 @@ class WidgetFrame(tk.Frame):
         self.requirements_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.open_vscode_var = tk.IntVar()
-        self.open_vscode_var.set(True)
+        self.open_vscode_var.set(self.default_options["open_vscode"])
         self.open_vscode_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
         self.open_vscode_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.open_vscode_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.open_vscode_var)
@@ -198,6 +211,31 @@ class WidgetFrame(tk.Frame):
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
         self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
 
+
+    @staticmethod
+    def get_defaults_from_config_file():
+        # CONFIG_FILE = "../config/gui_defaults.ini"
+        CONFIG_FILE = "config/gui_defaults.ini"
+        config = configparser.ConfigParser()
+        config.read(CONFIG_FILE)
+
+        default_options = dict()
+        default_options["local_repo_only"] = bool(int(config['ARGUMENTS'].get("local_repo_only", False)))
+        default_options["repository_name"] = str(config['ARGUMENTS'].get("repository_name", ""))
+        default_options["local_directory_path"] = str(config['ARGUMENTS'].get("local_directory_path", ""))
+        default_options["venv"] = bool(int(config['ARGUMENTS'].get("venv", True)))
+        default_options["docs"] = bool(int(config['ARGUMENTS'].get("docs", True)))
+        default_options["logs"] = bool(int(config['ARGUMENTS'].get("logs", True)))
+        default_options["notes"] = bool(int(config['ARGUMENTS'].get("notes", True)))
+        default_options["src"] = bool(int(config['ARGUMENTS'].get("src", True)))
+        default_options["tests"] = bool(int(config['ARGUMENTS'].get("tests", True)))
+        default_options["images"] = bool(int(config['ARGUMENTS'].get("images", True)))
+        default_options["config"] = bool(int(config['ARGUMENTS'].get("config", True)))
+        default_options["requirements"] = bool(int(config['ARGUMENTS'].get("requirements", True)))
+        default_options["gitignore"] = str(config['ARGUMENTS'].get("gitignore", "None"))
+        default_options["open_vscode"] = str(config['ARGUMENTS'].get("open_vscode", False))
+
+        return default_options
 
     @staticmethod
     def get_gitiginore_templates_from_github():
