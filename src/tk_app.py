@@ -86,6 +86,7 @@ class WidgetFrame(tk.Frame):
         self.local_repo_only_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.local_repo_only_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.local_repo_only_var)
         self.local_repo_only_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Local Repository Only?")
+        self.local_repo_only_checkbutton.bind_command(self.activate_deactivate_repository_name_entry)
         self.local_repo_only_checkbutton.pack(padx=10, pady=(30, 0), anchor="w")
 
         self.repository_name_label = tk.Label(self.widget_frame.scrollable_frame, text="Repository Name")
@@ -195,3 +196,9 @@ class WidgetFrame(tk.Frame):
         self.create_project_button_2.config(**MyTkinterStyle.BUTTON)
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
         self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
+
+    def activate_deactivate_repository_name_entry(self):
+        if self.local_repo_only_var.get() == False:
+            self.repository_name_entry.config(state="disabled")
+        else:
+            self.repository_name_entry.config(state="normal")

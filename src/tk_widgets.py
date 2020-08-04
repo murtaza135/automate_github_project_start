@@ -137,15 +137,19 @@ class TextSeparatedCheckbutton(tk.Frame):
 
     def create_widgets_in_default_state(self):
         self.checkbutton = tk.Checkbutton(self)
+        self.checkbutton.bindtags(("text_separated_checkbutton",) + self.checkbutton.bindtags())
         self.text_label = tk.Label(self)
+        self.text_label.bindtags(("text_separated_checkbutton",) + self.text_label.bindtags())
+        self.text_label.bind("<Button-1>", lambda event: self.checkbutton.toggle())
+
+    def bind_command(self, function, *args, **kwargs):
+        self.bind_class("text_separated_checkbutton", "<Button-1>", lambda event: function(*args, **kwargs))
 
     def config_frame(self, **kwargs):
         self.config(**kwargs)
 
-    def config_checkbutton(self, variable, **kwargs):
-        self.variable = variable
-        self.checkbutton.config(variable=self.variable, **kwargs)
-        self.text_label.bind("<Button-1>", lambda event: self.checkbutton.toggle())
+    def config_checkbutton(self, **kwargs):
+        self.checkbutton.config(**kwargs)
 
     def config_text_label(self, **kwargs):
         self.text_label.config(**kwargs)
