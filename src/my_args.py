@@ -24,6 +24,7 @@ class MyArgs:
         self.parser.add_argument("--no_images", action="store_true", help="do not create an images directory")
         self.parser.add_argument("--no_config", action="store_true", help="do not create a config directory")
         self.parser.add_argument("--no_requirements", action="store_true", help="create a requirements.txt file")
+        self.parser.add_argument("--open_vscode", action="store_true", help="open vscode")
         self.parser.add_argument("-g", "--gitignore", type=str, help="choose a gitignore template")
         self.parser.add_argument("-c", "--config", action="store_true", help="use default values from config file (cmd_defaults.ini)")
 
@@ -41,8 +42,6 @@ class MyArgs:
         config.read(CONFIG_FILE)
 
         self.args.local_repo_only = bool(int(config['ARGUMENTS'].get("local_repo_only", self.args.local_repo_only)))
-        self.args.repository_name = str(config['ARGUMENTS'].get("repository_name", self.args.repository_name))
-        self.args.local_directory_path = str(config['ARGUMENTS'].get("local_directory_path", self.args.local_directory_path))
         self.args.no_venv = bool(int(config['ARGUMENTS'].get("no_venv", self.args.no_venv)))
         self.args.no_docs = bool(int(config['ARGUMENTS'].get("no_docs", self.args.no_docs)))
         self.args.no_logs = bool(int(config['ARGUMENTS'].get("no_logs", self.args.no_logs)))
@@ -51,11 +50,10 @@ class MyArgs:
         self.args.no_tests = bool(int(config['ARGUMENTS'].get("no_tests", self.args.no_tests)))
         self.args.no_images = bool(int(config['ARGUMENTS'].get("no_images", self.args.no_images)))
         self.args.no_config = bool(int(config['ARGUMENTS'].get("no_config", self.args.no_config)))
+        self.args.open_vscode = bool(int(config['ARGUMENTS'].get("open_vscode", self.args.open_vscode)))
         self.args.no_requirements = bool(int(config['ARGUMENTS'].get("no_requirements", self.args.no_requirements)))
         self.args.gitignore = str(config['ARGUMENTS'].get("gitignore", self.args.gitignore))
 
-        if self.args.repository_name == "": self.args.repository_name = None
-        if self.args.local_directory_path == "": self.args.local_directory_path = os.path.abspath(self.args.local_directory_path)
         if self.args.gitignore == "": self.args.gitignore = None
 
 

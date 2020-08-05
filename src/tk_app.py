@@ -301,7 +301,7 @@ class WidgetFrame(tk.Frame):
 
         self.controller.project.set_all_options(
             local_repo_only=self.local_repo_only_var.get(),
-            repository_name=self.repository_name_entry.get(),
+            repository_name=self.repository_name_entry.get() if self.repository_name_entry.get() != "" else None,
             local_directory_path=self.local_directory_path_entry.get() if self.local_directory_path_entry.get() != "" else None,
             venv=self.venv_var.get(),
             docs=self.docs_var.get(),

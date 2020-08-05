@@ -24,7 +24,8 @@ if __name__ == "__main__":
         images=not(args.args.no_images),
         config=not(args.args.no_config),
         requirements=not(args.args.no_requirements),
-        gitignore=args.args.gitignore
+        gitignore=args.args.gitignore,
+        open_vscode=args.args.open_vscode
     )
 
     try:
