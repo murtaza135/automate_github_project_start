@@ -24,7 +24,7 @@ class TkApp(tk.Tk):
         self.title("Automate Github Project Start")
         # self.iconbitmap("../images/icon.ico")
         self.iconbitmap("images/icon.ico")
-        self.geometry("575x740") # "575x685"
+        self.geometry("575x760") # "575x685"
         self.minsize(575, 685)
 
     def initialise_controller(self):
@@ -122,9 +122,11 @@ class WidgetFrame(tk.Frame):
         self.separator_1 = ttk.Separator(self.widget_frame.scrollable_frame, orient="horizontal", style="General.Horizontal.TSeparator")
         self.separator_1.pack(padx=10, pady=(30, 0), fill="x", expand=True)
 
-        self.extra_options_label = tk.Label(self.widget_frame.scrollable_frame, text="Extra Options:")
+        self.extra_options_label = tk.Label(self.widget_frame.scrollable_frame, text="Show Additional Options")
         self.extra_options_label.config(**MyTkinterStyle.LABEL)
-        self.extra_options_label.pack(padx=10, pady=(50, 0), anchor="w")
+        self.extra_options_label.config(font=("Verdana", 12, "bold"))
+        self.extra_options_label.bind("<Button-1>", lambda event: self.show_additional_options())
+        self.extra_options_label.pack(padx=10, pady=(30, 0), anchor="w")
 
         self.venv_var = tk.IntVar()
         self.venv_var.set(self.default_options["venv"])
@@ -132,7 +134,7 @@ class WidgetFrame(tk.Frame):
         self.venv_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.venv_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.venv_var)
         self.venv_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create venv?")
-        self.venv_checkbutton.pack(padx=20, pady=(20, 0), anchor="w")
+        # self.venv_checkbutton.pack(padx=20, pady=(20, 0), anchor="w")
 
         self.docs_var = tk.IntVar()
         self.docs_var.set(self.default_options["docs"])
@@ -140,7 +142,7 @@ class WidgetFrame(tk.Frame):
         self.docs_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.docs_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.docs_var)
         self.docs_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a docs directory?")
-        self.docs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.docs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.logs_var = tk.IntVar()
         self.logs_var.set(self.default_options["logs"])
@@ -148,7 +150,7 @@ class WidgetFrame(tk.Frame):
         self.logs_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.logs_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.logs_var)
         self.logs_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a logs directory?")
-        self.logs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.logs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.notes_var = tk.IntVar()
         self.notes_var.set(self.default_options["notes"])
@@ -156,7 +158,7 @@ class WidgetFrame(tk.Frame):
         self.notes_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.notes_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.notes_var)
         self.notes_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a notes directory?")
-        self.notes_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.notes_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.src_var = tk.IntVar()
         self.src_var.set(self.default_options["src"])
@@ -164,7 +166,7 @@ class WidgetFrame(tk.Frame):
         self.src_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.src_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.src_var)
         self.src_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a src directory?")
-        self.src_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.src_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.tests_var = tk.IntVar()
         self.tests_var.set(self.default_options["tests"])
@@ -172,7 +174,7 @@ class WidgetFrame(tk.Frame):
         self.tests_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.tests_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.tests_var)
         self.tests_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a tests directory?")
-        self.tests_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.tests_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.images_var = tk.IntVar()
         self.images_var.set(self.default_options["images"])
@@ -180,7 +182,7 @@ class WidgetFrame(tk.Frame):
         self.images_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.images_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.images_var)
         self.images_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create an images directory?")
-        self.images_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.images_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.config_var = tk.IntVar()
         self.config_var.set(self.default_options["config"])
@@ -188,7 +190,7 @@ class WidgetFrame(tk.Frame):
         self.config_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.config_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.config_var)
         self.config_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a config directory?")
-        self.config_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.config_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.requirements_var = tk.IntVar()
         self.requirements_var.set(self.default_options["requirements"])
@@ -196,7 +198,7 @@ class WidgetFrame(tk.Frame):
         self.requirements_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.requirements_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.requirements_var)
         self.requirements_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a requirements.txt file?")
-        self.requirements_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.requirements_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.open_vscode_var = tk.IntVar()
         self.open_vscode_var.set(self.default_options["open_vscode"])
@@ -204,12 +206,12 @@ class WidgetFrame(tk.Frame):
         self.open_vscode_checkbutton.config_frame(**MyTkinterStyle.FRAME)
         self.open_vscode_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.open_vscode_var)
         self.open_vscode_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Open vscode?")
-        self.open_vscode_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        # self.open_vscode_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.create_project_button_2 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
         self.create_project_button_2.config(**MyTkinterStyle.BUTTON)
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
-        self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
+        # self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
 
 
     @staticmethod
@@ -279,3 +281,22 @@ class WidgetFrame(tk.Frame):
             self.repository_name_entry.config(state="disabled")
         else:
             self.repository_name_entry.config(state="normal")
+
+    def show_additional_options(self):
+        self.extra_options_label.config(text="Additional Options:", font=("Verdana", 12))
+        
+        self.venv_checkbutton.pack(padx=20, pady=(20, 0), anchor="w")
+        self.docs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        self.logs_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        self.notes_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        self.src_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        self.tests_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        self.images_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        self.config_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        self.requirements_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+        self.open_vscode_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
+
+        self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
+
+    def create_project(self):
+        pass
