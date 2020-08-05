@@ -8,6 +8,7 @@ from tk_tools import TkTools
 import tkinter.messagebox as tkpopup
 import tkinter.filedialog as tkfile
 from github import Github
+from my_github import MyGithub
 import configparser
 import os
 
@@ -16,20 +17,28 @@ class TkApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         self.initialise_tk(*args, **kwargs)
+        self.initialise_paths()
         self.initialise_controller()
         self.initialise_styles()
         self.create_widget_frame()
 
-    def initialise_tk(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.title("Automate Github Project Start")
-        # self.iconbitmap("../images/icon.ico")
-        self.iconbitmap("images/icon.ico")
-        self.geometry("575x760") # "575x685"
-        self.minsize(575, 760)
+    def initialise_paths(self):
+        # self.ICON = "../images/icon.ico"
+        self.ICON = "images/icon.ico"
+        # self.GITIGNORE_TEMPLATES_FILE = "../config/gitignore_templates.txt"
+        self.GITIGNORE_TEMPLATES_FILE = "config/gitignore_templates.txt"
+        # self.GUI_CONFIG_FILE = "../config/gui_defaults.ini"
+        self.GUI_CONFIG_FILE = "config/gui_defaults.ini"
 
     def initialise_controller(self):
         self.project = ProjectCreator()
+
+    def initialise_tk(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.title("Automate Github Project Start")
+        self.iconbitmap(self.ICON)
+        self.geometry("575x760")
+        self.minsize(575, 760)
 
     def initialise_styles(self):
         self.style = MyTtkStyle("clam")
@@ -107,7 +116,7 @@ class WidgetFrame(tk.Frame):
         self.gitignore_combobox_label.config(**MyTkinterStyle.LABEL)
         self.gitignore_combobox_label.pack(padx=10, pady=(30, 0), anchor="w")
 
-        self.gitignore_combobox_options = self.get_gitiginore_templates_from_github()
+        self.gitignore_combobox_options = self.get_gitiginore_templates_and_save_if_possible()
         self.gitignore_combobox = ttk.Combobox(self.widget_frame.scrollable_frame, value=self.gitignore_combobox_options, width=30, style="General.TCombobox", state="readonly")
         self.gitignore_combobox.option_add("*TCombobox*Listbox*Background", Colour.DARK_3)
         self.gitignore_combobox.option_add("*TCombobox*Listbox.foreground", Colour.BLUE_2)
@@ -204,10 +213,8 @@ class WidgetFrame(tk.Frame):
 
 
     def get_default_options_from_config_file(self):
-        # CONFIG_FILE = "../config/gui_defaults.ini"
-        CONFIG_FILE = "config/gui_defaults.ini"
         config = configparser.ConfigParser()
-        config.read(CONFIG_FILE)
+        config.read(self.controller.GUI_CONFIG_FILE)
 
         self.default_options = dict()
         self.default_options["local_repo_only"] = bool(int(config['ARGUMENTS'].get("local_repo_only", False)))
@@ -248,23 +255,28 @@ class WidgetFrame(tk.Frame):
         else:
             self.repository_name_entry.config(state="normal")
 
-    @staticmethod
-    def get_gitiginore_templates_from_github():
+    def get_gitiginore_templates_and_save_if_possible(self):
         try:
-            gh = Github(timeout=5)
-            gitignore_templates = gh.get_gitignore_templates()
-            with open("config/gitignore_templates.txt", "w") as f:
-                f.writelines([f"{template}\n" for template in gitignore_templates[:-1]])
-                f.write(gitignore_templates[-1])
-            gitignore_templates.insert(0, "None")
-            return gitignore_templates
+            gitignore_templates = MyGithub.get_all_gitignore_templates()
+            self.write_gitignore_templates_to_file(gitignore_templates)
         except:
             tkpopup.showerror("Error", "Could not retrieve .gitignore templates from Github. Loading cached .gitignore templates instead (which may be out of date).")
-            with open("config/gitignore_templates.txt", "r") as f:
-                gitignore_templates = f.read()
-                gitignore_templates = [template for template in gitignore_templates.split("\n")]
-                gitignore_templates.insert(0, "None")
-            return gitignore_templates
+            gitignore_templates = self.read_gitignore_templates_from_file()
+        
+        gitignore_templates.insert(0, "None")
+        return gitignore_templates
+
+    def write_gitignore_templates_to_file(self, gitignore_templates):
+        with open(self.controller.GITIGNORE_TEMPLATES_FILE, "w") as f:
+            f.writelines([f"{template}\n" for template in gitignore_templates[:-1]])
+            f.write(gitignore_templates[-1])
+
+    def read_gitignore_templates_from_file(self):
+        with open(self.controller.GITIGNORE_TEMPLATES_FILE, "r") as f:
+            gitignore_templates = f.read() # returns templates, not in a list, but in a giant STRING
+            gitignore_templates = [template for template in gitignore_templates.split("\n")] # templates separated out into a list
+        
+        return gitignore_templates
 
     def show_additional_options(self):
         self.additional_options_label.config(text="Additional Options:", font=("Verdana", 12))

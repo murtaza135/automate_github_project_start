@@ -143,10 +143,12 @@ class ProjectCreator:
 
     def create_specified_gitignore_file_if_any(self):
         if self.gitignore:
-            gitignore_template = self.gh.get_specific_gitignore_template(self.gitignore)
-
-            if gitignore_template == None:
-                print(f"Error: could not find the '{self.gitignore}' gitignore template")
+            try:
+                gitignore_template = MyGithub.get_specific_gitignore_template(self.gitignore)
+            except Exception as e:
+                print(e)
+                # print(f"Error: could not find the '{self.gitignore}' gitignore template")
+                gitignore_template = None
 
             print("creating .gitignore file...")
 
