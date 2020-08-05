@@ -16,9 +16,9 @@ import os
 class TkApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-        self.initialise_tk(*args, **kwargs)
         self.initialise_paths()
         self.initialise_controller()
+        self.initialise_tk(*args, **kwargs)
         self.initialise_styles()
         self.create_widget_frame()
 
@@ -124,7 +124,7 @@ class WidgetFrame(tk.Frame):
         self.gitignore_combobox.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
         self.create_project_button_1 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
-        self.create_project_button_1.config(**MyTkinterStyle.BUTTON)
+        self.create_project_button_1.config(**MyTkinterStyle.BUTTON, command=self.create_project)
         self.create_project_button_1.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
         self.create_project_button_1.pack(padx=10, pady=(50, 0), fill="x", expand=True)
 
@@ -208,7 +208,7 @@ class WidgetFrame(tk.Frame):
         self.open_vscode_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Open vscode?")
 
         self.create_project_button_2 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
-        self.create_project_button_2.config(**MyTkinterStyle.BUTTON)
+        self.create_project_button_2.config(**MyTkinterStyle.BUTTON, command=self.create_project)
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
 
 
@@ -273,7 +273,7 @@ class WidgetFrame(tk.Frame):
 
     def read_gitignore_templates_from_file(self):
         with open(self.controller.GITIGNORE_TEMPLATES_FILE, "r") as f:
-            gitignore_templates = f.read() # returns templates, not in a list, but in a giant STRING
+            gitignore_templates = f.read() # returns templates in a giant STRING, not in a list
             gitignore_templates = [template for template in gitignore_templates.split("\n")] # templates separated out into a list
         
         return gitignore_templates
@@ -295,4 +295,34 @@ class WidgetFrame(tk.Frame):
         self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
 
     def create_project(self):
+        # if not(self.are_values_for_all_options_valid()):
+        #     tkpopup.showerror("Error", "Error")
+        #     return
+
+        self.controller.project.set_all_options(
+            local_repo_only=self.local_repo_only_var.get(),
+            repository_name=self.repository_name_entry.get(),
+            local_directory_path=self.local_directory_path_entry.get() if self.local_directory_path_entry.get() != "" else None,
+            venv=self.venv_var.get(),
+            docs=self.docs_var.get(),
+            logs=self.logs_var.get(),
+            notes=self.notes_var.get(),
+            src=self.src_var.get(),
+            tests=self.tests_var.get(),
+            images=self.images_var.get(),
+            config=self.config_var.get(),
+            requirements=self.requirements_var.get(),
+            gitignore=self.gitignore_combobox.get(),
+            open_vscode=self.open_vscode_var.get()
+        )
+
+        try:
+            self.controller.project.create_project()
+        except Exception as e:
+            tkpopup.showerror("Error", e)
+
+    def get_values_for_all_options(self):
+        pass
+
+    def are_values_for_all_options_valid(self):
         pass
