@@ -133,13 +133,20 @@ class TextSeparatedCheckbutton(tk.Frame):
     def __init__(self, container, cnf={}):
         super().__init__(container, cnf)
         self.container = container
-        self.create_widgets_in_default_state()
+        self.create_widgets_with_no_config()
+        self.create_bindings_for_widgets()
 
-    def create_widgets_in_default_state(self):
+    def create_widgets_with_no_config(self):
         self.checkbutton = tk.Checkbutton(self)
-        self.checkbutton.bindtags((f"{id(self)}",) + self.checkbutton.bindtags())
         self.text_label = tk.Label(self)
-        self.text_label.bindtags((f"{id(self)}",) + self.text_label.bindtags())
+
+    def create_bindings_for_widgets(self):
+        # doing bindtags(self.widget.bindtags() + (f"{id(self)}",))
+        # instead of the other way round, ie. bindtags((f"{id(self)}",) + self.widget.bindtags())
+        # means that the checkbutton will first be toggled
+        # BEFORE the command/function that is binded to TextSeparatedCheckbutton is executed
+        self.checkbutton.bindtags(self.checkbutton.bindtags() + (f"{id(self)}",))
+        self.text_label.bindtags(self.text_label.bindtags() + (f"{id(self)}",))
         self.text_label.bind("<Button-1>", lambda event: self.checkbutton.toggle())
 
     def bind_command(self, function, *args, **kwargs):

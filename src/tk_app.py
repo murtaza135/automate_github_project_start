@@ -111,6 +111,7 @@ class WidgetFrame(tk.Frame):
 
         self.repository_name_entry = tk.Entry(self.widget_frame.scrollable_frame)
         self.repository_name_entry.config(**MyTkinterStyle.ENTRY)
+        self.activate_deactivate_repository_name_entry()
         self.repository_name_entry.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
         self.gitignore_combobox_label = tk.Label(self.widget_frame.scrollable_frame, text=".gitignore File")
@@ -233,7 +234,7 @@ class WidgetFrame(tk.Frame):
         self.repository_name_entry.insert("end", parent_directory_folder_name)
 
     def activate_deactivate_repository_name_entry(self):
-        if self.local_repo_only_var.get() == False:
+        if self.local_repo_only_var.get() == True:
             self.repository_name_entry.config(state="disabled")
         else:
             self.repository_name_entry.config(state="normal")
