@@ -76,13 +76,13 @@ class WidgetFrame(tk.Frame):
         self.local_directory_path_label.grid(row=0, column=0, columnspan=2, sticky="w")
 
         self.local_directory_path_entry = tk.Entry(self.local_directory_path_frame)
-        self.local_directory_path_entry.insert("end", os.path.abspath(self.default_options["local_directory_path"]))
+        # self.local_directory_path_entry.insert("end", os.path.abspath(self.default_options["local_directory_path"]))
         self.local_directory_path_entry.config(**MyTkinterStyle.ENTRY, state="readonly")
         self.local_directory_path_entry.xview_moveto(1)
         self.local_directory_path_entry.grid(row=1, column=0, pady=(5, 0), sticky="we")
 
         self.local_directory_path_dialog_box_button = tk.Button(self.local_directory_path_frame, text="...")
-        self.local_directory_path_dialog_box_button.config(**MyTkinterStyle.BUTTON, command=self.get_local_directory_path)
+        self.local_directory_path_dialog_box_button.config(**MyTkinterStyle.BUTTON, command=self.get_directory_path_and_set_auto_repository_name)
         self.local_directory_path_dialog_box_button.grid(row=1, column=1, padx=(12, 0), pady=(5, 0), sticky="w")
 
         self.local_repo_only_var = tk.IntVar()
@@ -100,7 +100,7 @@ class WidgetFrame(tk.Frame):
 
         self.repository_name_entry = tk.Entry(self.widget_frame.scrollable_frame)
         self.repository_name_entry.config(**MyTkinterStyle.ENTRY)
-        self.repository_name_entry.insert("end", self.default_options["repository_name"])
+        # self.repository_name_entry.insert("end", self.default_options["repository_name"])
         self.repository_name_entry.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
         self.gitignore_combobox_label = tk.Label(self.widget_frame.scrollable_frame, text=".gitignore File")
@@ -221,8 +221,8 @@ class WidgetFrame(tk.Frame):
 
         default_options = dict()
         default_options["local_repo_only"] = bool(int(config['ARGUMENTS'].get("local_repo_only", False)))
-        default_options["repository_name"] = str(config['ARGUMENTS'].get("repository_name", ""))
-        default_options["local_directory_path"] = str(config['ARGUMENTS'].get("local_directory_path", ""))
+        # default_options["repository_name"] = str(config['ARGUMENTS'].get("repository_name", ""))
+        # default_options["local_directory_path"] = str(config['ARGUMENTS'].get("local_directory_path", ""))
         default_options["venv"] = bool(int(config['ARGUMENTS'].get("venv", True)))
         default_options["docs"] = bool(int(config['ARGUMENTS'].get("docs", True)))
         default_options["logs"] = bool(int(config['ARGUMENTS'].get("logs", True)))
@@ -242,19 +242,37 @@ class WidgetFrame(tk.Frame):
         try:
             gh = Github(timeout=5)
             gitignore_templates = gh.get_gitignore_templates()
+            with open("config/gitignore_templates.txt", "w") as f:
+                f.writelines([f"{template}\n" for template in gitignore_templates[:-1]])
+                f.write(gitignore_templates[-1])
             gitignore_templates.insert(0, "None")
             return gitignore_templates
         except:
-            tkpopup.showerror("Error", "Could not retrieve .gitignore templates from Github")
-            return ["None", "Python"]
+            tkpopup.showerror("Error", "Could not retrieve .gitignore templates from Github. Loading cached .gitignore templates instead (which may be out of date).")
+            with open("config/gitignore_templates.txt", "r") as f:
+                gitignore_templates = f.read()
+                gitignore_templates = [template for template in gitignore_templates.split("\n")]
+                gitignore_templates.insert(0, "None")
+            return gitignore_templates
+
+    def get_directory_path_and_set_auto_repository_name(self):
+        self.get_local_directory_path()
+        self.generate_repository_name_based_upon_directory_name()
 
     def get_local_directory_path(self):
         directory_path = tkfile.askdirectory(title="Choose Project Path")
+        if directory_path == "": return
         self.local_directory_path_entry.config(state="normal")
         self.local_directory_path_entry.delete(0, "end")
         self.local_directory_path_entry.insert("end", directory_path.strip())
         self.local_directory_path_entry.xview_moveto(1)
         self.local_directory_path_entry.config(state="readonly")
+
+    def generate_repository_name_based_upon_directory_name(self):
+        parent_directory_folder_name = os.path.basename(self.local_directory_path_entry.get())
+        parent_directory_folder_name = parent_directory_folder_name.lower().replace(" ", "_")
+        self.repository_name_entry.delete(0, "end")
+        self.repository_name_entry.insert("end", parent_directory_folder_name)
 
     def activate_deactivate_repository_name_entry(self):
         if self.local_repo_only_var.get() == False:
