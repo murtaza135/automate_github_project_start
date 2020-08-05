@@ -5,13 +5,18 @@ import os
 class MyGithub:
 
     def __init__(self):
-        token = os.environ.get("automate_github_project_start_token")
-        self.gh = Github(token)
-        self.user = self.gh.get_user()
-
+        try:
+            TOKEN = os.environ.get("automate_github_project_start_token")
+            self.gh = Github(TOKEN)
+            self.user = self.gh.get_user()
+        except:
+            raise Exception("Could not connect to Github")
 
     def create_github_repository(self, repository_name):
-        self.repository = self.user.create_repo(repository_name)
+        try:
+            self.repository = self.user.create_repo(repository_name)
+        except:
+            raise Exception("Could not create new remote repository on Github")
 
 
     @staticmethod
@@ -23,10 +28,10 @@ class MyGithub:
             raise Exception("Could not retrieve .gitignore templates from Github")
 
 
-    @staticmethod
-    def get_specific_gitignore_template(template_name):
+    @classmethod
+    def get_specific_gitignore_template(cls, template_name):
         try:
-            gitignore_templates = MyGithub.get_all_gitignore_templates()
+            gitignore_templates = cls.get_all_gitignore_templates()
         except:
             raise
 

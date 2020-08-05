@@ -5,8 +5,18 @@ import configparser
 
 class MyArgs:
 
+    # CONFIG_FILE = "../config/cmd_defaults.ini"
+    CONFIG_FILE = "config/cmd_defaults.ini"
+
     def __init__(self):
         pass
+
+
+    def get_args_from_terminal_and_config_file_in_correct_form(self):
+        self.get_args_from_terminal()
+        if self.args.config_file:
+            self.get_args_from_config_file_and_overwrite_old_args()
+        self.put_args_in_correct_form()
 
 
     def get_args_from_terminal(self):
@@ -25,36 +35,36 @@ class MyArgs:
         self.parser.add_argument("--no_config", action="store_true", help="do not create a config directory")
         self.parser.add_argument("--no_requirements", action="store_true", help="create a requirements.txt file")
         self.parser.add_argument("--open_vscode", action="store_true", help="open vscode")
-        self.parser.add_argument("-g", "--gitignore", type=str, help="choose a gitignore template")
-        self.parser.add_argument("-c", "--config", action="store_true", help="use default values from config file (cmd_defaults.ini)")
+        self.parser.add_argument("-g", "--gitignore", type=str, default=None, help="choose a gitignore template")
+        self.parser.add_argument("-c", "--config_file", action="store_true", help="use default values from config file (cmd_defaults.ini)")
 
         self.args = self.parser.parse_args()
 
+
+    def get_args_from_config_file_and_overwrite_old_args(self):
+        config_file = configparser.ConfigParser()
+        config_file.read(type(self).CONFIG_FILE)
+
+        self.args.local_repo_only = bool(int(config_file['ARGUMENTS'].get("local_repo_only", self.args.local_repo_only)))
+        self.args.no_venv = bool(int(config_file['ARGUMENTS'].get("no_venv", self.args.no_venv)))
+        self.args.no_docs = bool(int(config_file['ARGUMENTS'].get("no_docs", self.args.no_docs)))
+        self.args.no_logs = bool(int(config_file['ARGUMENTS'].get("no_logs", self.args.no_logs)))
+        self.args.no_notes = bool(int(config_file['ARGUMENTS'].get("no_notes", self.args.no_notes)))
+        self.args.no_src = bool(int(config_file['ARGUMENTS'].get("no_src", self.args.no_src)))
+        self.args.no_tests = bool(int(config_file['ARGUMENTS'].get("no_tests", self.args.no_tests)))
+        self.args.no_images = bool(int(config_file['ARGUMENTS'].get("no_images", self.args.no_images)))
+        self.args.no_config = bool(int(config_file['ARGUMENTS'].get("no_config", self.args.no_config)))
+        self.args.open_vscode = bool(int(config_file['ARGUMENTS'].get("open_vscode", self.args.open_vscode)))
+        self.args.no_requirements = bool(int(config_file['ARGUMENTS'].get("no_requirements", self.args.no_requirements)))
+        self.args.gitignore = str(config_file['ARGUMENTS'].get("gitignore", self.args.gitignore))
+
+
+    def put_args_in_correct_form(self):
         self.args.local_directory_path = os.path.abspath(self.args.local_directory_path)
         if self.args.repository_name == None or self.args.repository_name == "":
             self.generate_repository_name_based_upon_directory_name()
-
-
-    def get_args_from_config_file_and_overwrite_old_args(self):
-        # CONFIG_FILE = "../config/cmd_defaults.ini"
-        CONFIG_FILE = "config/cmd_defaults.ini"
-        config = configparser.ConfigParser()
-        config.read(CONFIG_FILE)
-
-        self.args.local_repo_only = bool(int(config['ARGUMENTS'].get("local_repo_only", self.args.local_repo_only)))
-        self.args.no_venv = bool(int(config['ARGUMENTS'].get("no_venv", self.args.no_venv)))
-        self.args.no_docs = bool(int(config['ARGUMENTS'].get("no_docs", self.args.no_docs)))
-        self.args.no_logs = bool(int(config['ARGUMENTS'].get("no_logs", self.args.no_logs)))
-        self.args.no_notes = bool(int(config['ARGUMENTS'].get("no_notes", self.args.no_notes)))
-        self.args.no_src = bool(int(config['ARGUMENTS'].get("no_src", self.args.no_src)))
-        self.args.no_tests = bool(int(config['ARGUMENTS'].get("no_tests", self.args.no_tests)))
-        self.args.no_images = bool(int(config['ARGUMENTS'].get("no_images", self.args.no_images)))
-        self.args.no_config = bool(int(config['ARGUMENTS'].get("no_config", self.args.no_config)))
-        self.args.open_vscode = bool(int(config['ARGUMENTS'].get("open_vscode", self.args.open_vscode)))
-        self.args.no_requirements = bool(int(config['ARGUMENTS'].get("no_requirements", self.args.no_requirements)))
-        self.args.gitignore = str(config['ARGUMENTS'].get("gitignore", self.args.gitignore))
-
-        if self.args.gitignore == "": self.args.gitignore = None
+        if self.args.gitignore == "":
+            self.args.gitignore = None
 
 
     def generate_repository_name_based_upon_directory_name(self):

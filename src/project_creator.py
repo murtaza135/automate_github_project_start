@@ -6,14 +6,24 @@ import time
 class ProjectCreator:
 
     def __init__(self, **kwargs):
-        self.gh = MyGithub()
+        self.errors = list()
+        self.create_mygithub()
         self.set_all_options(**kwargs)
+
+
+    def create_mygithub(self):
+        try:
+            self.gh = MyGithub()
+        except Exception as e:
+            print(e)
+            self.errors.append(e)
+            self.gh = None
 
 
     def set_all_options(self, **kwargs):
         self.local_repo_only = kwargs["local_repo_only"] if "local_repo_only" in kwargs else False
         self.repository_name = kwargs["repository_name"] if "repository_name" in kwargs and kwargs["repository_name"] != "" else None
-        self.local_directory_path = kwargs["local_directory_path"] if "local_directory_path" in kwargs else None
+        self.local_directory_path = kwargs["local_directory_path"] if "local_directory_path" in kwargs and kwargs["local_directory_path"] != "" else None
         self.venv = kwargs["venv"] if "venv" in kwargs else False
         self.docs = kwargs["docs"] if "docs" in kwargs else False
         self.logs = kwargs["logs"] if "logs" in kwargs else False
@@ -23,7 +33,7 @@ class ProjectCreator:
         self.images = kwargs["images"] if "images" in kwargs else False
         self.config = kwargs["config"] if "config" in kwargs else False
         self.requirements = kwargs["requirements"] if "requirements" in kwargs else False
-        self.gitignore = kwargs["gitignore"] if "gitignore" in kwargs else None
+        self.gitignore = kwargs["gitignore"] if "gitignore" in kwargs and kwargs["gitignore"] != "" else None
         self.open_vscode = kwargs["open_vscode"] if "open_vscode" in kwargs else False
 
 
@@ -31,7 +41,7 @@ class ProjectCreator:
         if type(self.local_directory_path) == str and os.path.exists(self.local_directory_path):
             os.chdir(self.local_directory_path)
         else:
-            raise Exception("Error: Please provide a valid path to the directory in which you want to create your local repository")
+            raise Exception("Please provide a valid path to the directory in which you want to create your local repository")
 
         if type(self.repository_name) == str:
             self.create_venv_with_shortcuts_if_user_agrees()
@@ -49,10 +59,11 @@ class ProjectCreator:
             self.create_remote_repo_if_user_agrees()
             self.push_local_repository_to_remote()
 
+            self.create_error_txt_file_if_errors_occur()
             self.open_vscode_if_user_agrees()
 
         else:
-            raise Exception("Error: Please provide a repository name")
+            raise Exception("Please provide a repository name")
 
 
     def init_local_git_repository(self):
@@ -65,14 +76,25 @@ class ProjectCreator:
     def create_remote_repo_if_user_agrees(self):
         if not(self.local_repo_only):
             print("creating new remote github repository...")
-            self.gh.create_github_repository(self.repository_name)
-            time.sleep(1)
+            try:
+                self.gh.create_github_repository(self.repository_name)
+            except Exception as e:
+                print(e)
+                self.errors.append(e)
+            else:
+                time.sleep(1)
 
     
     def push_local_repository_to_remote(self):
         if not(self.local_repo_only):
-            os.system(f"git remote add origin https://github.com/{self.gh.user.login}/{self.repository_name}.git")
-            os.system("git push -u origin master")
+            print("pushing local repository to remote Github repository...")
+            try:
+                os.system(f"git remote add origin https://github.com/{self.gh.user.login}/{self.repository_name}.git")
+                os.system("git push -u origin master")
+            except:
+                error = "Could not push local repository to the remote Github repository"
+                print(error)
+                self.errors.append(error)
 
 
     def create_venv_with_shortcuts_if_user_agrees(self):
@@ -147,7 +169,7 @@ class ProjectCreator:
                 gitignore_template = MyGithub.get_specific_gitignore_template(self.gitignore)
             except Exception as e:
                 print(e)
-                # print(f"Error: could not find the '{self.gitignore}' gitignore template")
+                self.errors.append(e)
                 gitignore_template = None
 
             print("creating .gitignore file...")
@@ -163,3 +185,14 @@ class ProjectCreator:
         if self.open_vscode:
             print("opening vscode...")
             os.system("code .")
+
+    def create_error_txt_file_if_errors_occur(self):
+        if len(self.errors) != 0:
+            if len(self.errors) == 1:
+                print("Warning: An error has occurred in the creation of your project. Please check the 'errors.txt' file.")
+            elif len(self.errors) > 1:
+                print("Warning: Multiple errors have occurred in the creation of your project. Please check the 'errors.txt' file.")
+
+            with open("errors.txt", "w") as f:
+                f.writelines([f"{error}\n" for error in self.errors[:-1]])
+                f.write(self.errors[-1])

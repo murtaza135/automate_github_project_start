@@ -4,12 +4,7 @@ from project_creator import ProjectCreator
 
 if __name__ == "__main__":
     args = MyArgs()
-    args.get_args_from_terminal()
-
-    config_file = args.args.config
-    if config_file:
-        args.get_args_from_config_file_and_overwrite_old_args()
-
+    args.get_args_from_terminal_and_config_file_in_correct_form()
 
     project = ProjectCreator(
         local_repo_only=args.args.local_repo_only,
