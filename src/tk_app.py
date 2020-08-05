@@ -9,6 +9,7 @@ import tkinter.messagebox as tkpopup
 import tkinter.filedialog as tkfile
 from github import Github
 from my_github import MyGithub
+from my_gui_options import MyGuiOptions
 import configparser
 import os
 
@@ -27,11 +28,10 @@ class TkApp(tk.Tk):
         self.ICON = "images/icon.ico"
         # self.GITIGNORE_TEMPLATES_FILE = "../config/gitignore_templates.txt"
         self.GITIGNORE_TEMPLATES_FILE = "config/gitignore_templates.txt"
-        # self.GUI_CONFIG_FILE = "../config/gui_defaults.ini"
-        self.GUI_CONFIG_FILE = "config/gui_defaults.ini"
 
     def initialise_controller(self):
         self.project = ProjectCreator()
+        self.gui_options = MyGuiOptions()
 
     def initialise_tk(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -58,7 +58,8 @@ class WidgetFrame(tk.Frame):
         self.containter = container
         self.controller = controller
 
-        self.get_default_options_from_config_file()
+        self.controller.gui_options.get_default_options_from_config_file()
+        self.default_options = self.controller.gui_options.default_options
         self.create_widgets()
 
     
@@ -92,7 +93,7 @@ class WidgetFrame(tk.Frame):
         self.local_directory_path_entry.grid(row=1, column=0, pady=(5, 0), sticky="we")
 
         self.local_directory_path_dialog_box_button = tk.Button(self.local_directory_path_frame, text="...")
-        self.local_directory_path_dialog_box_button.config(**MyTkinterStyle.BUTTON, command=self.get_directory_path_and_auto_set_repository_name)
+        self.local_directory_path_dialog_box_button.config(**MyTkinterStyle.BUTTON, command=self.get_local_directory_path_and_auto_set_repository_name)
         self.local_directory_path_dialog_box_button.grid(row=1, column=1, padx=(12, 0), pady=(5, 0), sticky="w")
 
         self.local_repo_only_var = tk.IntVar()
@@ -212,25 +213,7 @@ class WidgetFrame(tk.Frame):
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
 
 
-    def get_default_options_from_config_file(self):
-        config = configparser.ConfigParser()
-        config.read(self.controller.GUI_CONFIG_FILE)
-
-        self.default_options = dict()
-        self.default_options["local_repo_only"] = bool(int(config['ARGUMENTS'].get("local_repo_only", False)))
-        self.default_options["venv"] = bool(int(config['ARGUMENTS'].get("venv", True)))
-        self.default_options["docs"] = bool(int(config['ARGUMENTS'].get("docs", True)))
-        self.default_options["logs"] = bool(int(config['ARGUMENTS'].get("logs", True)))
-        self.default_options["notes"] = bool(int(config['ARGUMENTS'].get("notes", True)))
-        self.default_options["src"] = bool(int(config['ARGUMENTS'].get("src", True)))
-        self.default_options["tests"] = bool(int(config['ARGUMENTS'].get("tests", True)))
-        self.default_options["images"] = bool(int(config['ARGUMENTS'].get("images", True)))
-        self.default_options["config"] = bool(int(config['ARGUMENTS'].get("config", True)))
-        self.default_options["requirements"] = bool(int(config['ARGUMENTS'].get("requirements", True)))
-        self.default_options["gitignore"] = str(config['ARGUMENTS'].get("gitignore", "None"))
-        self.default_options["open_vscode"] = str(config['ARGUMENTS'].get("open_vscode", False))
-
-    def get_directory_path_and_auto_set_repository_name(self):
+    def get_local_directory_path_and_auto_set_repository_name(self):
         self.get_local_directory_path()
         self.set_repository_name_based_upon_directory_name()
 

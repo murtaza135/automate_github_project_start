@@ -12,6 +12,7 @@ class MyGithub:
         except:
             raise Exception("Could not connect to Github")
 
+
     def create_github_repository(self, repository_name):
         try:
             self.repository = self.user.create_repo(repository_name)

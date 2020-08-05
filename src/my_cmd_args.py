@@ -3,20 +3,18 @@ import argparse
 import configparser
 
 
-class MyArgs:
-
-    # CONFIG_FILE = "../config/cmd_defaults.ini"
-    CONFIG_FILE = "config/cmd_defaults.ini"
+class MyCmdArgs:
 
     def __init__(self):
-        pass
+        # self.CONFIG_FILE = "../config/cmd_defaults.ini"
+        self.CONFIG_FILE = "config/cmd_defaults.ini"
 
 
     def get_args_from_terminal_and_config_file_in_correct_form(self):
         self.get_args_from_terminal()
         if self.args.config_file:
             self.get_args_from_config_file_and_overwrite_old_args()
-        self.put_args_in_correct_form()
+        self.validate_args_and_put_in_correct_form()
 
 
     def get_args_from_terminal(self):
@@ -43,7 +41,7 @@ class MyArgs:
 
     def get_args_from_config_file_and_overwrite_old_args(self):
         config_file = configparser.ConfigParser()
-        config_file.read(type(self).CONFIG_FILE)
+        config_file.read(self.CONFIG_FILE)
 
         self.args.local_repo_only = bool(int(config_file['ARGUMENTS'].get("local_repo_only", self.args.local_repo_only)))
         self.args.no_venv = bool(int(config_file['ARGUMENTS'].get("no_venv", self.args.no_venv)))
@@ -59,7 +57,7 @@ class MyArgs:
         self.args.gitignore = str(config_file['ARGUMENTS'].get("gitignore", self.args.gitignore))
 
 
-    def put_args_in_correct_form(self):
+    def validate_args_and_put_in_correct_form(self):
         self.args.local_directory_path = os.path.abspath(self.args.local_directory_path)
         if self.args.repository_name == None or self.args.repository_name == "":
             self.generate_repository_name_based_upon_directory_name()

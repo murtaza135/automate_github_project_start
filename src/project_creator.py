@@ -186,6 +186,7 @@ class ProjectCreator:
             print("opening vscode...")
             os.system("code .")
 
+
     def create_error_txt_file_if_errors_occur(self):
         if len(self.errors) != 0:
             if len(self.errors) == 1:

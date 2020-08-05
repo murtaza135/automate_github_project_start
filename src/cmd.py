@@ -1,9 +1,9 @@
-from my_args import MyArgs
+from my_cmd_args import MyCmdArgs
 from project_creator import ProjectCreator
 
 
 if __name__ == "__main__":
-    args = MyArgs()
+    args = MyCmdArgs()
     args.get_args_from_terminal_and_config_file_in_correct_form()
 
     project = ProjectCreator(
