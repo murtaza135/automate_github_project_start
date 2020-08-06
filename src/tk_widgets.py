@@ -48,7 +48,6 @@ class ScrollableFrame(tk.Frame):
         self.scrollbar.bind_mousewheel_y(scroll_activate_area, self.canvas)
 
 
-
 class AutohideScrollbar(tk.Scrollbar):
 
     def __init__(self, container, geometry_manager="grid", cnf={}, **kwargs):

@@ -246,6 +246,7 @@ class WidgetFrame(tk.Frame):
         self.open_vscode_button.config(**MyTkinterStyle.BUTTON, command=self.open_vscode_and_close_program)
         self.open_vscode_button.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
 
+
     def get_local_directory_path_and_auto_set_repository_name(self):
         self.get_local_directory_path()
         self.set_repository_name_based_upon_directory_name()
@@ -313,7 +314,7 @@ class WidgetFrame(tk.Frame):
     def create_project_in_thread_with_gui_changes(self):
         self.add_remove_widgets_for_project_creation_state()
         self.change_state_of_all_children_widgets(state="disabled")
-        self.revert_state_of_specific_widgets_in_disabled()
+        self.revert_state_of_specific_widgets_in_disabled_state()
         self.remove_all_binds()
 
         self.executor = concurrent.futures.ThreadPoolExecutor()
@@ -354,7 +355,7 @@ class WidgetFrame(tk.Frame):
 
     def notify_project_creation_warnings_or_success(self):
         WARNINGS = self.controller.project.errors
-        
+
         if len(WARNINGS) == 1:
             tkpopup.showwarning("Warning", "An error has occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
         elif len(WARNINGS) > 1:
@@ -365,7 +366,7 @@ class WidgetFrame(tk.Frame):
     def finish_create_project_thread_and_revert_gui_changes(self):
         self.revert_widgets_after_project_creation_state()
         self.change_state_of_all_children_widgets(state="normal")
-        self.revert_state_of_specific_widgets_in_normal()
+        self.revert_state_of_specific_widgets_in_normal_state()
         self.re_add_all_binds()
 
         self.executor.shutdown(wait=True)
@@ -396,11 +397,11 @@ class WidgetFrame(tk.Frame):
 
         change_state_of_children(self)
 
-    def revert_state_of_specific_widgets_in_disabled(self):
+    def revert_state_of_specific_widgets_in_disabled_state(self):
         self.logo.config(state="normal")
         self.progress_label.config(state="normal")
 
-    def revert_state_of_specific_widgets_in_normal(self):
+    def revert_state_of_specific_widgets_in_normal_state(self):
         self.local_directory_path_entry.config(state="readonly")
         self.gitignore_combobox.config(state="readonly")
         self.activate_deactivate_repository_name_entry()
@@ -417,4 +418,4 @@ class WidgetFrame(tk.Frame):
         if self.controller.project.local_directory_path != None:
             import os
             os.system(f'code "{self.controller.project.local_directory_path}"')
-            self.controller.destroy()
+            self.controller.quit()
