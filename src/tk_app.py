@@ -279,10 +279,6 @@ class WidgetFrame(tk.Frame):
         self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
 
     def create_project(self):
-        # if not(self.are_values_for_all_options_valid()):
-        #     tkpopup.showerror("Error", "Error")
-        #     return
-
         self.controller.project.set_all_options(
             local_repo_only=self.local_repo_only_var.get(),
             repository_name=self.repository_name_entry.get() if self.repository_name_entry.get() != "" else None,
@@ -305,8 +301,7 @@ class WidgetFrame(tk.Frame):
         except Exception as e:
             tkpopup.showerror("Error", e)
 
-    def get_values_for_all_options(self):
-        pass
-
-    def are_values_for_all_options_valid(self):
-        pass
+        if len(self.controller.project.errors) == 1:
+            tkpopup.showwarning("Warning", "An error has occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
+        elif len(self.controller.project.errors) > 1:
+            tkpopup.showwarning("Warning", "Multiple errors have occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
