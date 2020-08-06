@@ -236,8 +236,10 @@ class WidgetFrame(tk.Frame):
     def set_repository_name_based_upon_directory_name(self):
         parent_directory_folder_name = os.path.basename(self.local_directory_path_entry.get())
         parent_directory_folder_name = parent_directory_folder_name.lower().replace(" ", "_")
+        self.repository_name_entry.config(state="normal")
         self.repository_name_entry.delete(0, "end")
         self.repository_name_entry.insert("end", parent_directory_folder_name)
+        self.activate_deactivate_repository_name_entry()
 
     def activate_deactivate_repository_name_entry(self):
         if self.local_repo_only_var.get() == True:
@@ -293,18 +295,19 @@ class WidgetFrame(tk.Frame):
         self.revert_state_of_specific_widgets_in_disabled()
         self.remove_all_binds()
 
-        executor = concurrent.futures.ThreadPoolExecutor()
-        # with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.submit(self.create_project_and_show_errors)
+        self.executor = concurrent.futures.ThreadPoolExecutor()
+        self.executor.submit(self.create_project_and_show_errors)
 
     def stop_create_project_thread(self):
+        self.progress_bar.stop()
+        self.progress_bar.pack_forget()
+        self.progress_label.pack_forget()
+        
         self.change_state_of_all_children_widgets(state="normal")
         self.revert_state_of_specific_widgets_in_normal()
         self.re_add_all_binds()
 
-        self.progress_bar.stop()
-        self.progress_bar.pack_forget()
-        self.progress_label.pack_forget()
+        self.executor.shutdown()
 
     def create_project_and_show_errors(self):
         self.controller.project.set_all_options(
