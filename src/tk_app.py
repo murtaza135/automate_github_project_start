@@ -353,9 +353,11 @@ class WidgetFrame(tk.Frame):
             raise
 
     def notify_project_creation_warnings_or_success(self):
-        if len(self.controller.project.errors) == 1:
+        WARNINGS = self.controller.project.errors
+        
+        if len(WARNINGS) == 1:
             tkpopup.showwarning("Warning", "An error has occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
-        elif len(self.controller.project.errors) > 1:
+        elif len(WARNINGS) > 1:
             tkpopup.showwarning("Warning", "Multiple errors have occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
         else:
             tkpopup.showinfo("Project Created", "Project has been created!")
