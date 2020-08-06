@@ -15,7 +15,6 @@ import concurrent.futures
 class TkApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-        # self.get_curr_screen_geometry()
         self.initialise_paths()
         self.initialise_controller()
         self.initialise_tk(*args, **kwargs)
@@ -357,7 +356,9 @@ class WidgetFrame(tk.Frame):
             self.controller.project.create_project()
         except Exception as e:
             tkpopup.showerror("Error", e)
-
+            self.finish_create_project_thread()
+            return
+    
         if len(self.controller.project.errors) == 1:
             tkpopup.showwarning("Warning", "An error has occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
         elif len(self.controller.project.errors) > 1:
