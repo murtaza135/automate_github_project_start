@@ -1,4 +1,3 @@
-from project_creator import ProjectCreator
 import tkinter as tk
 import tkinter.ttk as ttk
 import tk_widgets as tkw
@@ -7,17 +6,16 @@ from tk_styles import Colour, MyTkinterStyle, MyTtkStyle
 from tk_tools import TkTools
 import tkinter.messagebox as tkpopup
 import tkinter.filedialog as tkfile
-from github import Github
+from project_creator import ProjectCreator
 from my_github import MyGithub
 from my_gui_options import MyGuiOptions
-import configparser
-import os
 import concurrent.futures
 
 
 class TkApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
+        # self.get_curr_screen_geometry()
         self.initialise_paths()
         self.initialise_controller()
         self.initialise_tk(*args, **kwargs)
@@ -25,10 +23,8 @@ class TkApp(tk.Tk):
         self.create_widget_frame()
 
     def initialise_paths(self):
-        # self.ICON = "../images/icon.ico"
-        self.ICON = "images/icon.ico"
-        # self.GITIGNORE_TEMPLATES_FILE = "../config/gitignore_templates.txt"
-        self.GITIGNORE_TEMPLATES_FILE = "config/gitignore_templates.txt"
+        self.ICON = "../images/icon.ico"
+        self.GITIGNORE_TEMPLATES_FILE = "../config/gitignore_templates.txt"
 
     def initialise_controller(self):
         self.project = ProjectCreator()
@@ -38,11 +34,13 @@ class TkApp(tk.Tk):
         super().__init__(*args, **kwargs)
         self.title("Automate Github Project Start")
         self.iconbitmap(self.ICON)
-        self.geometry("575x760")
-        self.minsize(575, 760)
+        min_height = self.get_min_window_height()
+        self.geometry(f"550x{min_height}+375+40")
+        self.minsize(550, min_height)
+        self.resizable(False, False)
 
     def initialise_styles(self):
-        self.style = MyTtkStyle("clam")
+        self.style = MyTtkStyle(theme="clam")
         self.style.create_all_premade_styles()
 
     def create_widget_frame(self):
@@ -50,6 +48,39 @@ class TkApp(tk.Tk):
         self.grid_columnconfigure(0, weight=1)
         self.widget_frame = WidgetFrame(container=self, controller=self)
         self.widget_frame.grid(row=0, column=0, sticky="nsew")
+
+    def get_min_window_height(self):
+        OPTIMUM_GUI_HEIGHT = 840
+        MIN_GUI_HEIGHT = 550
+
+        geometry = type(self).get_screen_geometry_string()
+        geometry = type(self).parse_geometry_string_into_list(geometry)
+        if geometry[1] >= OPTIMUM_GUI_HEIGHT:
+            return OPTIMUM_GUI_HEIGHT
+        else:
+            return MIN_GUI_HEIGHT
+
+    @staticmethod
+    def get_screen_geometry_string():
+        # The following method allows the resolution of the screen to be retreived even in a multi-monitor setup,
+        # as oposed to root.winfo_screenheight()
+        root = tk.Tk()
+        root.update_idletasks()
+        root.attributes('-fullscreen', True)
+        root.state('iconic')
+        geometry = root.winfo_geometry()
+        root.destroy()
+        return geometry
+
+    @staticmethod
+    def parse_geometry_string_into_list(geometry):
+        import re
+
+        matched = re.match("(\d+)x(\d+)([-+]\d+)([-+]\d+)", geometry)
+        if not matched:
+            return [0, 0, 0, 0]
+        return list(map(int, matched.groups()))
+        
 
 
 class WidgetFrame(tk.Frame):
@@ -74,8 +105,7 @@ class WidgetFrame(tk.Frame):
         self.widget_frame.canvas.pack(side="top", fill="both", expand=True)
         self.widget_frame.scrollbar.grid(row=0, column=1, sticky="ns")
 
-        # self.img = TkTools.get_image_tk_resized("../images/main logo with text - clear background.png")
-        self.img = TkTools.get_image_tk_resized("images/main logo with text - clear background.png", width=385, height=162)
+        self.img = TkTools.get_image_tk_resized("../images/main logo with text - clear background.png", width=385, height=162)
         self.logo = tk.Label(self.widget_frame.scrollable_frame, image=self.img)
         self.logo.config(**MyTkinterStyle.IMAGE)
         self.logo.pack(padx=10, pady=(30, 0))
@@ -231,8 +261,7 @@ class WidgetFrame(tk.Frame):
         self.local_directory_path_entry.config(state="readonly")
 
     def set_repository_name_based_upon_directory_name(self):
-        parent_directory_folder_name = os.path.basename(self.local_directory_path_entry.get())
-        parent_directory_folder_name = parent_directory_folder_name.lower().replace(" ", "_")
+        parent_directory_folder_name = MyGuiOptions.generate_name_based_upon_directory_name(self.local_directory_path_entry.get())
         self.repository_name_entry.config(state="normal")
         self.repository_name_entry.delete(0, "end")
         self.repository_name_entry.insert("end", parent_directory_folder_name)
@@ -299,7 +328,7 @@ class WidgetFrame(tk.Frame):
         self.progress_bar.stop()
         self.progress_bar.pack_forget()
         self.progress_label.pack_forget()
-        self.open_vscode_button.pack(padx=10, pady=(30, 30), fill="x", expand=True)
+        self.open_vscode_button.pack(padx=10, pady=(30, 20), fill="x", expand=True)
         
         self.change_state_of_all_children_widgets(state="normal")
         self.revert_state_of_specific_widgets_in_normal()

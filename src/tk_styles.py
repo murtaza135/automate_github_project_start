@@ -74,7 +74,7 @@ class MyTkinterStyle:
 
 class MyTtkStyle(ttk.Style):
         
-    def __init__(self, theme):
+    def __init__(self, theme="clam"):
         super().__init__()
         self.theme_use(theme)
 

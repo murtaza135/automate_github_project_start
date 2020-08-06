@@ -6,8 +6,7 @@ import configparser
 class MyCmdArgs:
 
     def __init__(self):
-        # self.CONFIG_FILE = "../config/cmd_defaults.ini"
-        self.CONFIG_FILE = "config/cmd_defaults.ini"
+        self.CONFIG_FILE = "../config/cmd_defaults.ini"
 
 
     def get_args_from_terminal_and_config_file_in_correct_form(self):
@@ -43,18 +42,18 @@ class MyCmdArgs:
         config_file = configparser.ConfigParser()
         config_file.read(self.CONFIG_FILE)
 
-        self.args.local_repo_only = bool(int(config_file['ARGUMENTS'].get("local_repo_only", self.args.local_repo_only)))
-        self.args.no_venv = bool(int(config_file['ARGUMENTS'].get("no_venv", self.args.no_venv)))
-        self.args.no_docs = bool(int(config_file['ARGUMENTS'].get("no_docs", self.args.no_docs)))
-        self.args.no_logs = bool(int(config_file['ARGUMENTS'].get("no_logs", self.args.no_logs)))
-        self.args.no_notes = bool(int(config_file['ARGUMENTS'].get("no_notes", self.args.no_notes)))
-        self.args.no_src = bool(int(config_file['ARGUMENTS'].get("no_src", self.args.no_src)))
-        self.args.no_tests = bool(int(config_file['ARGUMENTS'].get("no_tests", self.args.no_tests)))
-        self.args.no_images = bool(int(config_file['ARGUMENTS'].get("no_images", self.args.no_images)))
-        self.args.no_config = bool(int(config_file['ARGUMENTS'].get("no_config", self.args.no_config)))
-        self.args.open_vscode = bool(int(config_file['ARGUMENTS'].get("open_vscode", self.args.open_vscode)))
-        self.args.no_requirements = bool(int(config_file['ARGUMENTS'].get("no_requirements", self.args.no_requirements)))
-        self.args.gitignore = str(config_file['ARGUMENTS'].get("gitignore", self.args.gitignore))
+        self.args.local_repo_only = bool(int(config_file['DEFAULTS'].get("local_repo_only", self.args.local_repo_only)))
+        self.args.no_venv = bool(int(config_file['DEFAULTS'].get("no_venv", self.args.no_venv)))
+        self.args.no_docs = bool(int(config_file['DEFAULTS'].get("no_docs", self.args.no_docs)))
+        self.args.no_logs = bool(int(config_file['DEFAULTS'].get("no_logs", self.args.no_logs)))
+        self.args.no_notes = bool(int(config_file['DEFAULTS'].get("no_notes", self.args.no_notes)))
+        self.args.no_src = bool(int(config_file['DEFAULTS'].get("no_src", self.args.no_src)))
+        self.args.no_tests = bool(int(config_file['DEFAULTS'].get("no_tests", self.args.no_tests)))
+        self.args.no_images = bool(int(config_file['DEFAULTS'].get("no_images", self.args.no_images)))
+        self.args.no_config = bool(int(config_file['DEFAULTS'].get("no_config", self.args.no_config)))
+        self.args.open_vscode = bool(int(config_file['DEFAULTS'].get("open_vscode", self.args.open_vscode)))
+        self.args.no_requirements = bool(int(config_file['DEFAULTS'].get("no_requirements", self.args.no_requirements)))
+        self.args.gitignore = str(config_file['DEFAULTS'].get("gitignore", self.args.gitignore))
 
 
     def validate_args_and_put_in_correct_form(self):
