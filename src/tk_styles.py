@@ -104,3 +104,11 @@ class MyTtkStyle(ttk.Style):
             background=Colour.BLUE_2,
             foreground=Colour.BLUE_2,
         )
+
+    def create_style_general_tprogressbar(self):
+        self.configure("General.Horizontal.TProgressbar",
+            troughcolor=Colour.DARK_3,
+            background=Colour.BLUE_2,
+            lightcolor=Colour.BLUE_2,
+            darkcolor=Colour.BLUE_2
+        )

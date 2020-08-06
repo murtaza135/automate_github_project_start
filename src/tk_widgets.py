@@ -152,6 +152,9 @@ class TextSeparatedCheckbutton(tk.Frame):
     def bind_command(self, function, *args, **kwargs):
         self.bind_class(f"{id(self)}", "<Button-1>", lambda event: function(*args, **kwargs))
 
+    def unbind_command(self):
+        self.unbind_class(f"{id(self)}", "<Button-1>")
+
     def config_frame(self, **kwargs):
         self.config(**kwargs)
 
