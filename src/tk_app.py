@@ -156,7 +156,7 @@ class WidgetFrame(tk.Frame):
         self.gitignore_combobox.pack(padx=10, pady=(5, 0), anchor="w", fill="x", expand=True)
 
         self.create_project_button_1 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
-        self.create_project_button_1.config(**MyTkinterStyle.BUTTON, command=self.create_project_in_thread)
+        self.create_project_button_1.config(**MyTkinterStyle.BUTTON, command=self.create_project_in_thread_with_gui_changes)
         self.create_project_button_1.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
         self.create_project_button_1.pack(padx=10, pady=(50, 0), fill="x", expand=True)
 
@@ -233,7 +233,7 @@ class WidgetFrame(tk.Frame):
         self.requirements_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a requirements.txt file?")
 
         self.create_project_button_2 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
-        self.create_project_button_2.config(**MyTkinterStyle.BUTTON, command=self.create_project_in_thread)
+        self.create_project_button_2.config(**MyTkinterStyle.BUTTON, command=self.create_project_in_thread_with_gui_changes)
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
 
         self.progress_bar = ttk.Progressbar(self.widget_frame.scrollable_frame, orient="horizontal", mode='indeterminate', style="General.Horizontal.TProgressbar")
@@ -310,32 +310,27 @@ class WidgetFrame(tk.Frame):
 
         self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
 
-    def create_project_in_thread(self):
-        self.open_vscode_button.pack_forget()
-        self.progress_bar.pack(pady=(0, 5), fill="x", expand=True)
-        self.progress_label.pack(pady=(0, 30))
-        self.progress_bar.start()
-
+    def create_project_in_thread_with_gui_changes(self):
+        self.add_remove_widgets_for_project_creation_state()
         self.change_state_of_all_children_widgets(state="disabled")
         self.revert_state_of_specific_widgets_in_disabled()
         self.remove_all_binds()
 
         self.executor = concurrent.futures.ThreadPoolExecutor()
-        self.executor.submit(self.create_project_and_show_errors)
+        self.executor.submit(self.create_project_show_errors_notifications_and_apply_gui_changes)
 
-    def finish_create_project_thread(self):
-        self.progress_bar.stop()
-        self.progress_bar.pack_forget()
-        self.progress_label.pack_forget()
-        self.open_vscode_button.pack(padx=10, pady=(30, 20), fill="x", expand=True)
-        
-        self.change_state_of_all_children_widgets(state="normal")
-        self.revert_state_of_specific_widgets_in_normal()
-        self.re_add_all_binds()
+    def create_project_show_errors_notifications_and_apply_gui_changes(self):
+        try:
+            self.create_project()
+        except Exception as e:
+            tkpopup.showerror("Error", e)
+        else:
+            self.notify_project_creation_warnings_or_success()
+            self.open_vscode_button.pack(padx=10, pady=(30, 20), fill="x", expand=True)
+        finally:
+            self.finish_create_project_thread_and_revert_gui_changes()
 
-        self.executor.shutdown(wait=True)
-
-    def create_project_and_show_errors(self):
+    def create_project(self):
         self.controller.project.set_all_options(
             local_repo_only=self.local_repo_only_var.get(),
             repository_name=self.repository_name_entry.get() if self.repository_name_entry.get() != "" else None,
@@ -354,11 +349,10 @@ class WidgetFrame(tk.Frame):
 
         try:
             self.controller.project.create_project()
-        except Exception as e:
-            tkpopup.showerror("Error", e)
-            self.finish_create_project_thread()
-            return
-    
+        except:
+            raise
+
+    def notify_project_creation_warnings_or_success(self):
         if len(self.controller.project.errors) == 1:
             tkpopup.showwarning("Warning", "An error has occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
         elif len(self.controller.project.errors) > 1:
@@ -366,7 +360,24 @@ class WidgetFrame(tk.Frame):
         else:
             tkpopup.showinfo("Project Created", "Project has been created!")
 
-        self.finish_create_project_thread()
+    def finish_create_project_thread_and_revert_gui_changes(self):
+        self.revert_widgets_after_project_creation_state()
+        self.change_state_of_all_children_widgets(state="normal")
+        self.revert_state_of_specific_widgets_in_normal()
+        self.re_add_all_binds()
+
+        self.executor.shutdown(wait=True)
+
+    def add_remove_widgets_for_project_creation_state(self):
+        self.open_vscode_button.pack_forget()
+        self.progress_bar.pack(pady=(0, 5), fill="x", expand=True)
+        self.progress_label.pack(pady=(0, 30))
+        self.progress_bar.start()
+        
+    def revert_widgets_after_project_creation_state(self):
+        self.progress_bar.stop()
+        self.progress_bar.pack_forget()
+        self.progress_label.pack_forget()
 
     def change_state_of_all_children_widgets(self, state):
         # adapted from https://stackoverflow.com/questions/51902451/how-to-enable-and-disable-frame-instead-of-individual-widgets-in-python-tkinter/52152773
