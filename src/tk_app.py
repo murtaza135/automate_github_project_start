@@ -307,7 +307,7 @@ class WidgetFrame(tk.Frame):
         self.revert_state_of_specific_widgets_in_normal()
         self.re_add_all_binds()
 
-        self.executor.shutdown()
+        self.executor.shutdown(wait=True)
 
     def create_project_and_show_errors(self):
         self.controller.project.set_all_options(
@@ -331,8 +331,6 @@ class WidgetFrame(tk.Frame):
             self.controller.project.create_project()
         except Exception as e:
             tkpopup.showerror("Error", e)
-        finally:
-            self.stop_create_project_thread()
 
         if len(self.controller.project.errors) == 1:
             tkpopup.showwarning("Warning", "An error has occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
@@ -340,6 +338,8 @@ class WidgetFrame(tk.Frame):
             tkpopup.showwarning("Warning", "Multiple errors have occurred in the creation of your project. Please check the 'agps_errors.txt' file.")
         else:
             tkpopup.showinfo("Project Created", "Project has been created!")
+
+        self.stop_create_project_thread()
 
     def change_state_of_all_children_widgets(self, state):
         # adapted from https://stackoverflow.com/questions/51902451/how-to-enable-and-disable-frame-instead-of-individual-widgets-in-python-tkinter/52152773
@@ -358,6 +358,7 @@ class WidgetFrame(tk.Frame):
 
     def revert_state_of_specific_widgets_in_disabled(self):
         self.logo.config(state="normal")
+        self.progress_label.config(state="normal")
 
     def revert_state_of_specific_widgets_in_normal(self):
         self.local_directory_path_entry.config(state="readonly")

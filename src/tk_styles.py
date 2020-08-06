@@ -81,6 +81,7 @@ class MyTtkStyle(ttk.Style):
     def create_all_premade_styles(self):
         self.create_style_general_tcombobox()
         self.create_style_general_tseparator()
+        self.create_style_general_tprogressbar()
 
     def create_style_general_tcombobox(self):
         self.configure("General.TCombobox",
