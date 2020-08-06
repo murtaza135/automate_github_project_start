@@ -203,13 +203,6 @@ class WidgetFrame(tk.Frame):
         self.requirements_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.requirements_var)
         self.requirements_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Create a requirements.txt file?")
 
-        self.open_vscode_var = tk.IntVar()
-        self.open_vscode_var.set(self.default_options["open_vscode"])
-        self.open_vscode_checkbutton = tkw.TextSeparatedCheckbutton(self.widget_frame.scrollable_frame)
-        self.open_vscode_checkbutton.config_frame(**MyTkinterStyle.FRAME)
-        self.open_vscode_checkbutton.config_checkbutton(bg=Colour.DARK_3, variable=self.open_vscode_var)
-        self.open_vscode_checkbutton.config_text_label(**MyTkinterStyle.LABEL, text="Open vscode?")
-
         self.create_project_button_2 = tk.Button(self.widget_frame.scrollable_frame, text="Create Project")
         self.create_project_button_2.config(**MyTkinterStyle.BUTTON, command=self.create_project_in_thread)
         self.create_project_button_2.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
@@ -219,6 +212,10 @@ class WidgetFrame(tk.Frame):
         self.progress_label = tk.Label(self.widget_frame.scrollable_frame, text="Creating Project... Please Wait")
         self.progress_label.config(**MyTkinterStyle.LABEL)
         self.progress_label.config(anchor="center")
+
+        self.open_vscode_button = tk.Button(self.widget_frame.scrollable_frame, text="Open VS Code")
+        self.open_vscode_button.config(**MyTkinterStyle.BUTTON, command=self.open_vscode_and_close_program)
+        self.open_vscode_button.config(font=("Verdana", 16), bg=Colour.BLUE_4, fg=Colour.BLUE_1)
 
     def get_local_directory_path_and_auto_set_repository_name(self):
         self.get_local_directory_path()
@@ -282,11 +279,11 @@ class WidgetFrame(tk.Frame):
         self.images_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
         self.config_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
         self.requirements_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
-        self.open_vscode_checkbutton.pack(padx=20, pady=(15, 0), anchor="w")
 
         self.create_project_button_2.pack(padx=10, pady=(50, 30), fill="x", expand=True)
 
     def create_project_in_thread(self):
+        self.open_vscode_button.pack_forget()
         self.progress_bar.pack(pady=(0, 5), fill="x", expand=True)
         self.progress_label.pack(pady=(0, 30))
         self.progress_bar.start()
@@ -298,10 +295,11 @@ class WidgetFrame(tk.Frame):
         self.executor = concurrent.futures.ThreadPoolExecutor()
         self.executor.submit(self.create_project_and_show_errors)
 
-    def stop_create_project_thread(self):
+    def finish_create_project_thread(self):
         self.progress_bar.stop()
         self.progress_bar.pack_forget()
         self.progress_label.pack_forget()
+        self.open_vscode_button.pack(padx=10, pady=(30, 30), fill="x", expand=True)
         
         self.change_state_of_all_children_widgets(state="normal")
         self.revert_state_of_specific_widgets_in_normal()
@@ -323,8 +321,7 @@ class WidgetFrame(tk.Frame):
             images=self.images_var.get(),
             config=self.config_var.get(),
             requirements=self.requirements_var.get(),
-            gitignore=self.gitignore_combobox.get(),
-            open_vscode=self.open_vscode_var.get()
+            gitignore=self.gitignore_combobox.get()
         )
 
         try:
@@ -339,7 +336,7 @@ class WidgetFrame(tk.Frame):
         else:
             tkpopup.showinfo("Project Created", "Project has been created!")
 
-        self.stop_create_project_thread()
+        self.finish_create_project_thread()
 
     def change_state_of_all_children_widgets(self, state):
         # adapted from https://stackoverflow.com/questions/51902451/how-to-enable-and-disable-frame-instead-of-individual-widgets-in-python-tkinter/52152773
@@ -372,3 +369,9 @@ class WidgetFrame(tk.Frame):
     def re_add_all_binds(self):
         self.local_repo_only_checkbutton.bind_command(self.activate_deactivate_repository_name_entry)
         self.additional_options_label.bind("<Button-1>", lambda event: self.show_additional_options())
+
+    def open_vscode_and_close_program(self):
+        if self.controller.project.local_directory_path != None:
+            import os
+            os.system(f'code "{self.controller.project.local_directory_path}"')
+            self.controller.destroy()

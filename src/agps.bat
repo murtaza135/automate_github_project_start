@@ -2,4 +2,4 @@
 
 set flag=%*
 
-python command_line.py %flag%
+python cmd.py %flag%

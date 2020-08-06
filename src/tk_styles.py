@@ -111,5 +111,6 @@ class MyTtkStyle(ttk.Style):
             troughcolor=Colour.DARK_3,
             background=Colour.BLUE_2,
             lightcolor=Colour.BLUE_2,
-            darkcolor=Colour.BLUE_2
+            darkcolor=Colour.BLUE_2,
+            bordercolor=Colour.BLUE_2
         )
